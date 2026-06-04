@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 11% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 11% 15%;
+
+    --primary: 180 71% 35%;   /* teal brand */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 15% 96%;
+    --secondary-foreground: 210 11% 15%;
+
+    --muted: 210 15% 96%;
+    --muted-foreground: 215 13% 45%;
+
+    --accent: 180 40% 94%;
+    --accent-foreground: 180 71% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 20% 91%;
+    --input: 214 20% 91%;
+    --ring: 180 71% 35%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 25% 9%;
+    --foreground: 210 20% 95%;
+
+    --card: 222 25% 12%;
+    --card-foreground: 210 20% 95%;
+
+    --primary: 180 60% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 25% 17%;
+    --secondary-foreground: 210 20% 95%;
+
+    --muted: 222 25% 17%;
+    --muted-foreground: 215 13% 60%;
+
+    --accent: 180 30% 18%;
+    --accent-foreground: 180 60% 70%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 20% 22%;
+    --input: 222 20% 22%;
+    --ring: 180 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

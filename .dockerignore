@@ -1,0 +1,16 @@
+node_modules
+.git
+.gitignore
+.turbo
+.next
+dist
+build
+coverage
+*.log
+.env
+.env.*
+!.env.example
+.docker-volumes
+README.md
+CLAUDE.md
+docs/

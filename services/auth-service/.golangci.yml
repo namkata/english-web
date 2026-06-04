@@ -1,0 +1,30 @@
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gocritic
+    - exhaustive
+    - noctx
+    - bodyclose
+    - sqlclosecheck
+    - wrapcheck        # ensures DB/external errors are wrapped before returning
+
+linters-settings:
+  wrapcheck:
+    ignoreSigs:
+      - "github.com/english-web/auth-service/pkg/errors"
+
+issues:
+  exclude-rules:
+    - path: "_test\\.go"
+      linters:
+        - wrapcheck

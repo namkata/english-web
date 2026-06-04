@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+
+  # ── TypeScript / Next.js ────────────────────────────────
+  web-lint-build:
+    name: Web — Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm type-check
+      - run: pnpm build
+
+  # ── Go — auth-service ───────────────────────────────────
+  auth-service-test:
+    name: Auth Service — Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/auth-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.23" }
+      - name: Download deps
+        run: go mod download
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          working-directory: services/auth-service
+          version: latest
+      - name: Test
+        run: go test -race -coverprofile=coverage.out ./...
+      - name: Coverage gate (≥70%)
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | tr -d '%')
+          echo "Coverage: $COVERAGE%"
+          awk "BEGIN { if ($COVERAGE < 70) { print \"Coverage below 70%\"; exit 1 } }"
+
+  # ── Python — ai-service ─────────────────────────────────
+  ai-service-test:
+    name: AI Service — Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install ruff mypy pytest pytest-asyncio
+      - run: pip install -r requirements.txt
+      - name: Ruff format check
+        run: ruff format --check .
+      - name: Ruff lint
+        run: ruff check .
+      - name: Type check
+        run: mypy app/
+      - name: Unit tests
+        run: pytest tests/unit/ -v --tb=short
