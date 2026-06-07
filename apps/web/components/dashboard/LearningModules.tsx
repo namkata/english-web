@@ -86,11 +86,17 @@ export function LearningModules() {
           <div
             key={mod.href}
             className={cn(
-              'rounded-2xl border bg-card p-5 flex flex-col gap-3',
+              'relative rounded-2xl border bg-card p-5 flex flex-col gap-3 overflow-hidden',
               mod.comingSoon && 'opacity-60',
             )}
           >
-            <div className="flex items-center gap-3">
+            {/* Ghost icon */}
+            <mod.icon
+              size={80}
+              className="absolute -right-2 -bottom-2 text-muted/10 pointer-events-none"
+              strokeWidth={1}
+            />
+            <div className="flex items-center gap-3 relative z-10">
               <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center', mod.iconBg)}>
                 <mod.icon size={20} />
               </div>
@@ -105,10 +111,10 @@ export function LearningModules() {
               )}
             </div>
 
-            <p className="text-sm text-muted-foreground">{mod.description}</p>
+            <p className="text-sm text-muted-foreground relative z-10">{mod.description}</p>
 
             {mod.stats && (
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 relative z-10">
                 <div>
                   <p className="text-xl font-bold">{mod.stats.left}</p>
                   <p className="text-xs text-muted-foreground">{mod.stats.leftLabel}</p>
@@ -121,19 +127,30 @@ export function LearningModules() {
             )}
 
             {mod.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {mod.tags.map((tag) => (
-                  <span key={tag} className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">
-                    {tag}
-                  </span>
-                ))}
+              <div className="flex flex-wrap gap-1.5 relative z-10">
+                {mod.tags.map((tag, i) => {
+                  const colors = [
+                    'bg-amber-100 text-amber-700',
+                    'bg-green-100 text-green-700',
+                    'bg-blue-100 text-blue-700',
+                    'bg-orange-100 text-orange-700',
+                    'bg-purple-100 text-purple-700',
+                    'bg-pink-100 text-pink-700',
+                    'bg-teal-100 text-teal-700',
+                  ]
+                  return (
+                    <span key={tag} className={cn('text-xs px-2 py-0.5 rounded-full font-medium', colors[i % colors.length])}>
+                      {tag}
+                    </span>
+                  )
+                })}
               </div>
             )}
 
             {!mod.comingSoon && (
               <Link
                 href={mod.href as any}
-                className="mt-auto text-sm text-primary font-medium hover:underline inline-flex items-center gap-1"
+                className="mt-auto text-sm text-primary font-medium hover:underline inline-flex items-center gap-1 relative z-10"
               >
                 {mod.cta}
               </Link>

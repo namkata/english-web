@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, PenLine, BookOpen, FileText, MoreHorizontal } from 'lucide-react'
+import { LayoutDashboard, PenLine, BookOpen, Volume2, FileText, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { href: '/writing', label: 'Luyện viết', icon: PenLine },
   { href: '/reading', label: 'Đọc hiểu', icon: BookOpen },
   { href: '/vocabulary', label: 'Từ vựng', icon: FileText },
-  { href: '/quiz', label: 'Trắc nghiệm', icon: FileText },
+  { href: '/pronunciation', label: 'Phát âm', icon: Volume2 },
 ]
 
 interface Props {

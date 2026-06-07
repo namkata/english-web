@@ -52,14 +52,14 @@ export function DailyChallenges() {
           <div key={challenge.id} className="flex items-center gap-3">
             <div
               className={cn(
-                'w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center',
+                'w-5 h-5 rounded-full border flex-shrink-0 flex items-center justify-center',
                 challenge.isCompleted
                   ? 'bg-primary border-primary text-primary-foreground'
                   : 'border-muted-foreground',
               )}
             >
               {challenge.isCompleted && (
-                <svg viewBox="0 0 12 10" className="w-2.5 h-2.5" fill="none">
+                <svg viewBox="0 0 12 10" className="w-3 h-3" fill="none">
                   <path d="M1 5l3.5 3.5L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               )}

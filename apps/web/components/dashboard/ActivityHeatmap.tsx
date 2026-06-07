@@ -12,17 +12,19 @@ const INTENSITY_COLORS = [
   'bg-primary',        // 4 — high
 ]
 
-const MOCK_ACTIVITY = [
-  { date: '2026-06-04', intensity: 0, xp: 0 },
-  { date: '2026-06-03', intensity: 1, xp: 25 },
-  { date: '2026-06-01', intensity: 2, xp: 60 },
-]
+const MOCK_ACTIVITY = Array.from({ length: 91 }, (_, i) => {
+  const date = new Date()
+  date.setDate(date.getDate() - (90 - i))
+  const dateStr = date.toISOString().split('T')[0]!
+  const intensity = Math.random() > 0.6 ? Math.floor(Math.random() * 4) + 1 : 0
+  return { date: dateStr, intensity, xp: intensity * 25 }
+})
 
 export function ActivityHeatmap() {
   const { data: activity = [] } = useQuery({
     queryKey: ['gamification', 'activity'],
     queryFn: () => apiClient.gamification.getActivityHeatmap(3),
-    initialData: MOCK_ACTIVITY,
+    placeholderData: MOCK_ACTIVITY as any,
   })
 
   // Build a 13-week × 7-day grid (91 cells)

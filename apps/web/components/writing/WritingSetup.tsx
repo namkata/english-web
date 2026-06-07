@@ -88,11 +88,16 @@ export function WritingSetup() {
         </div>
       </div>
 
-      <button onClick={handleStart} disabled={!topic || loading}
-        className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
-        {loading && <Loader2 size={16} className="animate-spin" />}
-        Bắt đầu luyện viết từng câu →
-      </button>
+      <div className="relative z-10">
+        <button onClick={handleStart} disabled={!topic || loading}
+          className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
+          {loading && <Loader2 size={16} className="animate-spin" />}
+          Bắt đầu luyện viết từng câu →
+        </button>
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          Bạn cần có nguồn AI để sử dụng tính năng. <a href="/settings" className="text-primary hover:underline">Xem gói AI hệ thống</a> hoặc <a href="/settings" className="text-primary hover:underline">thêm API riêng</a>.
+        </p>
+      </div>
     </div>
   )
 }

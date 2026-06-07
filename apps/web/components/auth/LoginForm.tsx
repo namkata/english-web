@@ -94,6 +94,13 @@ export function LoginForm() {
         Đăng nhập
       </button>
 
+      {process.env.NODE_ENV === 'development' && (
+        <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-700">
+          <span className="font-semibold">Dev mode:</span> Dùng mock account —
+          <span className="font-mono"> demo@example.com</span> / <span className="font-mono">password</span>
+        </div>
+      )}
+
       <p className="text-center text-sm text-muted-foreground">
         Chưa có tài khoản?{' '}
         <Link href="/register" className="text-primary font-medium hover:underline">

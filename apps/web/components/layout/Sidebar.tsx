@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, PenLine, BookOpen, FileText, ClipboardList,
-  Headphones, Settings, MessageSquare,
+  Headphones, Volume2, Settings, MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -14,10 +14,11 @@ const navItems = [
   { href: '/reading',    label: 'Đọc hiểu',     icon: BookOpen },
   { href: '/vocabulary', label: 'Từ vựng',      icon: FileText },
   { href: '/quiz',       label: 'Trắc nghiệm',  icon: ClipboardList },
-  { href: '/grammar',    label: 'Ngữ pháp',     icon: FileText },
-  { href: '/listening',  label: 'Luyện nghe',   icon: Headphones },
-  { href: '/settings',   label: 'Cài đặt',      icon: Settings },
-  { href: '/feedback',   label: 'Phản hồi',     icon: MessageSquare },
+  { href: '/grammar',       label: 'Ngữ pháp',     icon: FileText },
+  { href: '/pronunciation', label: 'Phát âm',      icon: Volume2 },
+  { href: '/listening',     label: 'Luyện nghe',   icon: Headphones },
+  { href: '/settings',      label: 'Cài đặt',      icon: Settings },
+  { href: '/feedback',      label: 'Phản hồi',     icon: MessageSquare },
 ]
 
 interface Props {
@@ -47,7 +48,7 @@ export function Sidebar({ className }: Props) {
             className={cn(
               'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
               isActive
-                ? 'bg-primary/10 text-primary'
+                ? 'bg-brand-50 text-brand-700'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )}
           >

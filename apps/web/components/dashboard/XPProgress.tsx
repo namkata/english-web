@@ -53,19 +53,19 @@ export function XPProgress() {
           <p className="text-xs text-muted-foreground mt-1">toàn thời gian</p>
         </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground uppercase tracking-wide">STREAK</p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <Flame size={20} className="text-orange-500" />
-            <p className="text-2xl font-bold">{streak}</p>
-            <span className="text-sm text-muted-foreground">ngày</span>
+          <div>
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">STREAK</p>
+            <div className="flex items-center gap-1.5 mt-1">
+              <Flame size={20} className="text-orange-500" />
+              <p className="text-2xl font-bold">{streak}</p>
+              <span className="text-sm text-muted-foreground">ngày</span>
+            </div>
+            {streak === 0 ? (
+              <p className="text-xs text-orange-500 mt-1">Bắt đầu streak</p>
+            ) : (
+              <p className="text-xs text-green-600 mt-1">Hệ số x{Math.min(streak, 5)}</p>
+            )}
           </div>
-          {streak === 0 ? (
-            <p className="text-xs text-destructive mt-1">Bắt đầu streak</p>
-          ) : (
-            <p className="text-xs text-green-600 mt-1">Hệ số x{Math.min(streak, 5)}</p>
-          )}
-        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, CheckSquare } from 'lucide-react'
+import { Loader2, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const QUESTION_TYPES = [
@@ -78,8 +78,8 @@ export function QuizSetup() {
 
         <button onClick={handleCreate} disabled={loading || selectedTypes.length === 0}
           className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
-          {loading ? <Loader2 size={16} className="animate-spin" /> : <CheckSquare size={16} />}
-          ✨ TẠO BÀI TẬP
+          {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+          TẠO BÀI TẬP
         </button>
       </div>
 

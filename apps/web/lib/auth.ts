@@ -27,6 +27,22 @@ const config: NextAuthConfig = {
         const parsed = LoginSchema.safeParse(credentials)
         if (!parsed.success) return null
 
+        // --- Dev mock login: bypass real API when backend is not running ---
+        const isDev = process.env.NODE_ENV === 'development'
+        const isMockUser =
+          parsed.data.email === 'demo@example.com' &&
+          parsed.data.password === 'password'
+        if (isDev && isMockUser) {
+          return {
+            id: 'demo-user-001',
+            email: 'demo@example.com',
+            name: 'Demo User',
+            image: null,
+            accessToken: 'mock-access-token',
+            refreshToken: 'mock-refresh-token',
+          }
+        }
+
         try {
           const { user, tokens } = await apiClient.auth.login(parsed.data)
           return {

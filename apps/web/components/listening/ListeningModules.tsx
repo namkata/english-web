@@ -16,8 +16,8 @@ export function ListeningModules() {
           className="rounded-2xl border bg-card p-5 flex flex-col gap-3 opacity-70"
         >
           <div className="flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-              <Icon size={20} className="text-muted-foreground" />
+            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+              <Icon size={20} className="text-slate-500" />
             </div>
             <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
               Coming soon

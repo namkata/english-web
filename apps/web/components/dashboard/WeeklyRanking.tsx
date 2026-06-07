@@ -8,10 +8,11 @@ export function WeeklyRanking() {
   const { data: stats } = useQuery({
     queryKey: ['gamification', 'my-stats'],
     queryFn: () => apiClient.gamification.getMyStats(),
+    placeholderData: { weeklyRank: 163 } as any,
   })
 
   return (
-    <div className="rounded-2xl border bg-accent/40 p-5">
+    <div className="rounded-2xl border bg-blue-50 p-5">
       <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
         THỨ HẠNG TUẦN
       </p>

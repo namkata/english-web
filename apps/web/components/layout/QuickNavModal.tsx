@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import {
   LayoutDashboard, PenLine, BookOpen, FileText, ClipboardList,
-  Headphones, Users, MessageSquare, Settings, LogOut, X,
+  Headphones, Volume2, Users, MessageSquare, Settings, LogOut, X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -16,9 +16,10 @@ const items = [
   { href: '/reading',    label: 'Đọc hiểu',     icon: BookOpen,        danger: false },
   { href: '/vocabulary', label: 'Từ vựng',      icon: FileText,        danger: false },
   { href: '/quiz',       label: 'Trắc nghiệm',  icon: ClipboardList,   danger: false },
-  { href: '/grammar',    label: 'Ngữ pháp',     icon: FileText,        danger: false },
-  { href: '/listening',  label: 'Luyện nghe',   icon: Headphones,      danger: false },
-  { href: '/community',  label: 'Cộng đồng',    icon: Users,           danger: false },
+  { href: '/grammar',       label: 'Ngữ pháp',     icon: FileText,        danger: false },
+  { href: '/pronunciation', label: 'Phát âm',      icon: Volume2,         danger: false },
+  { href: '/listening',     label: 'Luyện nghe',   icon: Headphones,      danger: false },
+  { href: '/community',     label: 'Cộng đồng',    icon: Users,           danger: false },
   { href: '/feedback',   label: 'Phản hồi',     icon: MessageSquare,   danger: false },
   { href: '/settings',   label: 'Cài đặt',      icon: Settings,        danger: false },
   { href: '#',           label: 'Đăng xuất',    icon: LogOut,          danger: true  },

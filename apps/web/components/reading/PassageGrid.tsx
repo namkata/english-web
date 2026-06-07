@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { BookOpen } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { apiClient } from '@/lib/api-client'
 
 const MOCK_PASSAGES = [
@@ -14,15 +15,15 @@ const MOCK_PASSAGES = [
 ]
 
 export function PassageGrid() {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['reading', 'passages'],
     queryFn: () => apiClient.reading.listPassages({ limit: 6 }),
     placeholderData: { items: MOCK_PASSAGES, total: 6 } as any,
   })
 
-  const passages = data?.items ?? []
+  const passages = data?.items ?? MOCK_PASSAGES
 
-  if (!passages.length) {
+  if (isLoading && !passages.length) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -38,11 +39,16 @@ export function PassageGrid() {
         <div key={p.id} className="rounded-2xl border bg-card flex flex-col">
           <div className="p-4 flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-medium bg-muted px-2 py-0.5 rounded-full">{p.length === 'short' ? 'Ngắn' : p.length === 'medium' ? 'Vừa' : 'Dài'}</span>
+              <span className={cn(
+                'text-xs font-medium px-2 py-0.5 rounded-full',
+                p.length === 'short' ? 'bg-green-100 text-green-700' : p.length === 'medium' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+              )}>
+                {p.length === 'short' ? 'Ngắn' : p.length === 'medium' ? 'Vừa' : 'Dài'}
+              </span>
               <span className="text-xs text-muted-foreground">{p.questionCount} câu</span>
             </div>
             <h3 className="font-semibold mb-1">{p.title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-3">{p.content.slice(0, 120)}...</p>
+            <p className="text-sm text-muted-foreground line-clamp-3">{p.content}</p>
           </div>
           <div className="p-4 pt-0">
             <Link href={`/reading/${p.id}`} className="w-full flex items-center justify-center gap-2 rounded-xl border py-2 text-sm font-medium hover:bg-muted transition-colors">
