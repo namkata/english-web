@@ -380,3 +380,5 @@ tests/integration/        ← integration tests (testcontainers)
 | Validate in service before DB call | Rely on DB unique constraints as validation |
 | Add new env vars to `.env.example` | Hardcode config values in source |
 | Run `golangci-lint` / `ruff` / `eslint` before committing | Commit code that fails linting |
+
+## Imported Claude Cowork project instructions
