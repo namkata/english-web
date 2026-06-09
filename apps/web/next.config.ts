@@ -6,6 +6,14 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@english-web/ui', '@english-web/types'],
+  async rewrites() {
+    return [
+      {
+        source: '/api/v1/auth/:path*',
+        destination: 'http://localhost:4001/api/v1/auth/:path*',
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       {
