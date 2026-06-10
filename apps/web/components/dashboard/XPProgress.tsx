@@ -6,20 +6,9 @@ import { apiClient } from '@/lib/api-client'
 import { formatXP } from '@/lib/utils'
 
 export function XPProgress() {
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading } = useQuery({
     queryKey: ['gamification', 'my-stats'],
     queryFn: () => apiClient.gamification.getMyStats(),
-    placeholderData: {
-      userId: 'demo',
-      todayXP: 0,
-      dailyGoalXP: 200,
-      totalXP: 35,
-      streakDays: 0,
-      longestStreak: 0,
-      weeklyRank: null,
-      writingCount: 0,
-      readingCount: 0,
-    } as any,
   })
 
   const todayXP = stats?.todayXP ?? 0
@@ -27,6 +16,21 @@ export function XPProgress() {
   const totalXP = stats?.totalXP ?? 0
   const streak = stats?.streakDays ?? 0
   const progress = Math.min((todayXP / dailyGoal) * 100, 100)
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border bg-card p-5 space-y-4">
+        <div className="grid grid-cols-3 gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+              <div className="h-7 w-12 bg-muted animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="rounded-2xl border bg-card p-5 space-y-4">

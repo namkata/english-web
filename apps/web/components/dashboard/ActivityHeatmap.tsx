@@ -12,19 +12,10 @@ const INTENSITY_COLORS = [
   'bg-primary',        // 4 — high
 ]
 
-const MOCK_ACTIVITY = Array.from({ length: 91 }, (_, i) => {
-  const date = new Date()
-  date.setDate(date.getDate() - (90 - i))
-  const dateStr = date.toISOString().split('T')[0]!
-  const intensity = Math.random() > 0.6 ? Math.floor(Math.random() * 4) + 1 : 0
-  return { date: dateStr, intensity, xp: intensity * 25 }
-})
-
 export function ActivityHeatmap() {
-  const { data: activity = [] } = useQuery({
+  const { data: activity = [], isLoading } = useQuery({
     queryKey: ['gamification', 'activity'],
     queryFn: () => apiClient.gamification.getActivityHeatmap(3),
-    placeholderData: MOCK_ACTIVITY as any,
   })
 
   // Build a 13-week × 7-day grid (91 cells)
@@ -37,13 +28,17 @@ export function ActivityHeatmap() {
     return { date: dateStr, intensity: entry?.intensity ?? 0, xp: entry?.xp ?? 0 }
   })
 
+  const activityCount = activity.filter((a) => a.xp > 0).length
+
   return (
     <div className="rounded-2xl border bg-card p-5">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="font-semibold">Hoạt động luyện tập</h3>
           <p className="text-xs text-muted-foreground">
-            Bạn đã hoàn thành {activity.filter((a) => a.xp > 0).length} bài học trong 3 tháng gần nhất
+            {isLoading
+              ? 'Đang tải...'
+              : `Bạn đã hoàn thành ${activityCount} bài học trong 3 tháng gần nhất`}
           </p>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">

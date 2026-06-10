@@ -4,25 +4,23 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 
-const MOCK_SETS = [
-  { id: '1', name: 'Thư viện từ vựng', totalWords: 9, learnedWords: 0, progressPercent: 0 },
-  { id: '2', name: 'TOEIC 600 - Office', totalWords: 12, learnedWords: 12, progressPercent: 100 },
-  { id: '3', name: 'TOEIC 600 - Meetings & Email', totalWords: 12, learnedWords: 0, progressPercent: 0 },
-  { id: '4', name: 'Travel English - Star...', totalWords: 12, learnedWords: 0, progressPercent: 0 },
-]
-
 export function VocabSetList() {
-  const { data: sets = [] } = useQuery({
+  const { data: sets = [], isLoading, error } = useQuery({
     queryKey: ['vocabulary', 'sets'],
     queryFn: () => apiClient.vocabulary.listSets(),
-    initialData: MOCK_SETS,
   })
 
-  if (!sets.length) return (
+  if (isLoading) return (
     <div className="space-y-2">
       {Array.from({ length: 4 }).map((_, i) => (
         <div key={i} className="h-16 rounded-2xl bg-muted animate-pulse" />
       ))}
+    </div>
+  )
+
+  if (error || !sets.length) return (
+    <div className="text-center py-12 text-muted-foreground">
+      <p>Không có bộ từ vựng nào.</p>
     </div>
   )
 

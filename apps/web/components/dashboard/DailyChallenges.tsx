@@ -5,21 +5,26 @@ import { ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { apiClient } from '@/lib/api-client'
 
-const MOCK_CHALLENGES = [
-  { id: '1', title: 'Bài đọc đạt chuẩn', completedSteps: 0, totalSteps: 1, xpReward: 10, isCompleted: false },
-  { id: '2', title: 'Câu đúng Assignment', completedSteps: 0, totalSteps: 10, xpReward: 10, isCompleted: false },
-  { id: '3', title: 'Thêm từ vựng mới', completedSteps: 0, totalSteps: 5, xpReward: 5, isCompleted: false },
-]
-
 export function DailyChallenges() {
-  const { data: challenges = [] } = useQuery({
+  const { data: challenges = [], isLoading } = useQuery({
     queryKey: ['gamification', 'challenges'],
     queryFn: () => apiClient.gamification.getTodayChallenges(),
-    initialData: MOCK_CHALLENGES,
   })
 
   const completed = challenges.filter((c) => c.isCompleted).length
   const total = challenges.length
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border bg-card p-5 space-y-3">
+        <div className="h-5 w-32 bg-muted animate-pulse rounded" />
+        <div className="h-16 bg-muted animate-pulse rounded-xl" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="h-10 bg-muted animate-pulse rounded" />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="rounded-2xl border bg-card p-5">
