@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 
 export function WeeklyRanking() {
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats } = useQuery({
     queryKey: ['gamification', 'my-stats'],
     queryFn: () => apiClient.gamification.getMyStats(),
   })
