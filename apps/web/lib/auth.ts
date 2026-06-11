@@ -37,6 +37,7 @@ const config: NextAuthConfig = {
             image: user.avatarUrl,
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
+            expiresAt: tokens.expiresAt,
           }
         } catch {
           // Real API failed — fall back to mock in dev mode
@@ -65,8 +66,29 @@ const config: NextAuthConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as { accessToken?: string }).accessToken
-        token.refreshToken = (user as { refreshToken?: string }).refreshToken
+        const u = user as { accessToken?: string; refreshToken?: string; expiresAt?: number }
+        token.accessToken = u.accessToken
+        token.refreshToken = u.refreshToken
+        // Default 15-min TTL when the backend doesn't return expiresAt
+        token.expiresAt = u.expiresAt ?? Math.floor(Date.now() / 1000) + 900
+        return token
+      }
+
+      // Access token still valid (60s safety margin) — keep as-is
+      const expiresAt = (token.expiresAt as number | undefined) ?? 0
+      if (Date.now() / 1000 < expiresAt - 60) return token
+
+      // Expired — rotate via refresh token (skip for dev mock session)
+      const refreshToken = token.refreshToken as string | undefined
+      if (!refreshToken || refreshToken === 'mock-refresh-token') return token
+      try {
+        const tokens = await apiClient.auth.refresh(refreshToken)
+        token.accessToken = tokens.accessToken
+        token.refreshToken = tokens.refreshToken
+        token.expiresAt = tokens.expiresAt
+        delete token.error
+      } catch {
+        token.error = 'RefreshTokenError'
       }
       return token
     },

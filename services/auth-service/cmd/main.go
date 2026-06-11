@@ -57,11 +57,14 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "ok", "service": "auth-service"})
 	})
 
+	// Sliding-window rate limit on credential endpoints: 10 req / minute / IP
+	authLimiter := middleware.RateLimit(10, time.Minute)
+
 	v1 := r.Group("/api/v1/auth")
 	{
-		v1.POST("/register", authHandler.Register)
-		v1.POST("/login", authHandler.Login)
-		v1.POST("/refresh", authHandler.Refresh)
+		v1.POST("/register", authLimiter, authHandler.Register)
+		v1.POST("/login", authLimiter, authHandler.Login)
+		v1.POST("/refresh", authLimiter, authHandler.Refresh)
 		v1.POST("/logout", middleware.RequireAuth(), authHandler.Logout)
 		v1.GET("/me", middleware.RequireAuth(), authHandler.Me)
 	}

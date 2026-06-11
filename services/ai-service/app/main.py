@@ -4,6 +4,7 @@ import structlog
 import uvicorn
 from app.core.config import settings
 from app.core.errors import AppError
+from app.core.ratelimit import RateLimitMiddleware
 from app.core.response import error as error_response
 from app.routers import health, quiz, writing
 from fastapi import FastAPI, Request
@@ -20,6 +21,9 @@ def create_app() -> FastAPI:
         docs_url="/docs" if settings.is_development else None,
         redoc_url=None,
     )
+
+    # AI endpoints are LLM-backed and costly: 20 requests / minute / IP
+    app.add_middleware(RateLimitMiddleware, limit=20, window_seconds=60)
 
     app.add_middleware(
         CORSMiddleware,

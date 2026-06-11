@@ -108,6 +108,13 @@ const vocabulary = {
   markLearned: async (wordId: string) => {
     await http.post(`/vocabulary/words/${wordId}/learned`)
   },
+  review: async (wordId: string, quality: number, card?: import('./srs').SrsCard) => {
+    const res = await http.post<import('./srs').SrsCard>(
+      `/vocabulary/words/${wordId}/review`,
+      { quality, card },
+    )
+    return res.data
+  },
 }
 
 // ---- Quiz ----

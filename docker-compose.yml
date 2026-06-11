@@ -90,13 +90,23 @@ services:
       INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET}
     ports:
       - "${AUTH_SERVICE_PORT:-4001}:${AUTH_SERVICE_PORT:-4001}"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:${AUTH_SERVICE_PORT:-4001}/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
 
+  # NOTE: user/content/gamification services and the API gateway are not
+  # implemented yet — they sit behind the "future" profile so a plain
+  # `docker compose up` only starts what actually builds today.
+  # Enable later with: docker compose --profile future up
   user-service:
+    profiles: ["future"]
     build:
       context: ./services/user-service
       dockerfile: ../../infra/docker/Dockerfile.go
@@ -122,6 +132,7 @@ services:
         condition: service_healthy
 
   content-service:
+    profiles: ["future"]
     build:
       context: ./services/content-service
       dockerfile: ../../infra/docker/Dockerfile.go
@@ -161,11 +172,17 @@ services:
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
     ports:
       - "${AI_SERVICE_PORT:-4004}:${AI_SERVICE_PORT:-4004}"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,os;urllib.request.urlopen(f'http://localhost:{os.environ.get(\\\"APP_PORT\\\",\\\"4004\\\")}/health')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
       postgres:
         condition: service_healthy
 
   gamification-service:
+    profiles: ["future"]
     build:
       context: ./services/gamification-service
       dockerfile: ../../infra/docker/Dockerfile.go
@@ -194,6 +211,7 @@ services:
   # ── API Gateway ──────────────────────────────────────────
 
   api-gateway:
+    profiles: ["future"]
     build:
       context: ./services/api-gateway
       dockerfile: ../../infra/docker/Dockerfile.node
@@ -228,14 +246,24 @@ services:
     container_name: ew-web
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:${API_GATEWAY_PORT:-3001}
+      # Web talks to its own Next.js API routes (BFF) until the gateway ships;
+      # auth requests proxy to auth-service directly.
+      NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
+      AUTH_SERVICE_URL: http://auth-service:${AUTH_SERVICE_PORT:-4001}
+      AI_SERVICE_URL: http://ai-service:${AI_SERVICE_PORT:-4004}
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
-      - api-gateway
+      auth-service:
+        condition: service_healthy
 
 volumes:
   postgres_data:
