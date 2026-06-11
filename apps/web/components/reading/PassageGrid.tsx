@@ -37,13 +37,12 @@ export function PassageGrid() {
         <div key={p.id} className="rounded-2xl border bg-card flex flex-col">
           <div className="p-4 flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className={cn(
-                'text-xs font-medium px-2 py-0.5 rounded-full',
-                p.length === 'short' ? 'bg-green-100 text-green-700' : p.length === 'medium' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
-              )}>
+              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-100">
                 {p.length === 'short' ? 'Ngắn' : p.length === 'medium' ? 'Vừa' : 'Dài'}
               </span>
-              <span className="text-xs text-muted-foreground">{p.questionCount} câu</span>
+              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-100">
+                {p.questionCount} câu
+              </span>
             </div>
             <h3 className="font-semibold mb-1">{p.title}</h3>
             <p className="text-sm text-muted-foreground line-clamp-3">{p.content}</p>

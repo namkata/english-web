@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, RefreshCw, Sparkles } from 'lucide-react'
+import { ArrowRight, Loader2, RefreshCw, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 
@@ -31,7 +31,7 @@ export function WritingSetup() {
     router.push(`/writing/session/new?${params.toString()}`)
   }
 
-  const startLabel = mode === 'sentence_rewrite' ? 'Bắt đầu luyện viết lại câu →' : 'Bắt đầu luyện viết từng câu →'
+  const startLabel = mode === 'sentence_rewrite' ? 'Bắt đầu luyện viết lại câu' : 'Bắt đầu luyện viết từng câu'
 
   return (
     <div className="rounded-2xl border bg-card p-6 space-y-6">
@@ -41,7 +41,7 @@ export function WritingSetup() {
         <div className="grid grid-cols-3 gap-3">
           {DIFFICULTIES.map(d => (
             <button key={d.value} onClick={() => setDifficulty(d.value)}
-              className={cn('p-4 rounded-xl border text-left transition-colors', difficulty === d.value ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground')}>
+              className={cn('p-4 rounded-xl border text-left transition-colors', difficulty === d.value ? 'border-brand-500 bg-brand-50' : 'border-border hover:border-muted-foreground')}>
               <div className="flex items-center justify-between mb-1">
                 <span className="font-medium text-sm">{d.label}</span>
                 <span className="text-xs text-muted-foreground">{d.time}</span>
@@ -64,7 +64,7 @@ export function WritingSetup() {
         <div className="grid grid-cols-3 gap-2 mb-3">
           {DEFAULT_TOPICS.map(t => (
             <button key={t} onClick={() => setTopic(t)}
-              className={cn('p-3 rounded-xl border text-sm text-left transition-colors', topic === t ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground')}>
+              className={cn('p-3 rounded-xl border text-sm text-left transition-colors', topic === t ? 'border-brand-500 bg-brand-50' : 'border-border hover:border-muted-foreground')}>
               {t}
             </button>
           ))}
@@ -81,7 +81,7 @@ export function WritingSetup() {
         <div className="grid grid-cols-2 gap-3">
           {MODES.map(m => (
             <button key={m.value} onClick={() => setMode(m.value)}
-              className={cn('p-4 rounded-xl border text-left transition-colors', mode === m.value ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground')}>
+              className={cn('p-4 rounded-xl border text-left transition-colors', mode === m.value ? 'border-brand-500 bg-brand-50' : 'border-border hover:border-muted-foreground')}>
               <p className="font-medium text-sm mb-1">{m.label}</p>
               <p className="text-xs text-muted-foreground">{m.desc}</p>
             </button>
@@ -91,12 +91,13 @@ export function WritingSetup() {
 
       <div className="relative z-10">
         <button onClick={handleStart} disabled={!topic || loading}
-          className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
-          {loading && <Loader2 size={16} className="animate-spin" />}
+          className="flex items-center justify-center gap-2 w-full rounded-xl bg-brand-600 text-white py-3 text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 transition-colors">
+          {loading ? <Loader2 size={16} className="animate-spin" /> : null}
           {startLabel}
+          {!loading && <ArrowRight size={16} />}
         </button>
         <p className="text-xs text-muted-foreground mt-2 text-center">
-          Bạn cần có nguồn AI để sử dụng tính năng. <a href="/settings" className="text-primary hover:underline">Xem gói AI hệ thống</a> hoặc <a href="/settings" className="text-primary hover:underline">thêm API riêng</a>.
+          Bạn cần có nguồn AI để sử dụng tính năng. <a href="/settings/plan" className="text-primary hover:underline">Xem gói AI hệ thống</a> hoặc <a href="/settings/ai-provider" className="text-primary hover:underline">thêm API riêng</a>.
         </p>
       </div>
     </div>

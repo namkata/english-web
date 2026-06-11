@@ -40,7 +40,7 @@ export function XPProgress() {
           <p className="text-2xl font-bold mt-1">{todayXP}</p>
           <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full bg-primary rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>

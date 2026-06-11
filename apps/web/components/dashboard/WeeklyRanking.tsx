@@ -11,7 +11,7 @@ export function WeeklyRanking() {
   })
 
   return (
-    <div className="rounded-2xl border bg-blue-50 p-5">
+    <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
       <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
         THỨ HẠNG TUẦN
       </p>

@@ -55,7 +55,7 @@ export function QuizSetup() {
               </button>
             ))}
           </div>
-          {source === 'ai' && <p className="text-xs text-muted-foreground mt-2">AI cần nguồn AI. <a href="/settings" className="underline text-primary">Gói AI hệ thống</a> hoặc <a href="/settings" className="underline text-primary">thêm API riêng</a>.</p>}
+          {source === 'ai' && <p className="text-xs text-muted-foreground mt-2">AI cần nguồn AI. <a href="/settings/plan" className="underline text-primary">Gói AI hệ thống</a> hoặc <a href="/settings/ai-provider" className="underline text-primary">thêm API riêng</a>.</p>}
         </div>
 
         <div className="rounded-2xl border bg-card p-5 space-y-4">
@@ -73,17 +73,20 @@ export function QuizSetup() {
               {LEVELS.map(l => <option key={l} value={l}>{l} - {l === 'A1' ? 'Beginner' : l === 'A2' ? 'Elementary' : l === 'B1' ? 'Intermediate' : l === 'B2' ? 'Upper Intermediate' : l === 'C1' ? 'Advanced' : 'Mastery'}</option>)}
             </select>
           </div>
-          <label className="flex items-start gap-3 cursor-pointer">
+          <label className={cn(
+            'flex items-start gap-3 cursor-pointer rounded-xl border p-3 transition-colors',
+            examMode ? 'border-brand-500 bg-brand-50' : 'border-border hover:border-muted-foreground',
+          )}>
             <input type="checkbox" checked={examMode} onChange={e => setExamMode(e.target.checked)} className="mt-0.5 accent-primary" />
             <div>
               <p className="text-sm font-medium">Chế độ thi</p>
-              <p className="text-xs text-muted-foreground">Bật để dùng strict timer, cảnh báo khi rời trang, và giao diện tập trung hơn.</p>
+              <p className="text-xs text-muted-foreground">Full screen, strict timer theo số câu, cảnh báo khi rời trang và không xem đáp án giữa chừng.</p>
             </div>
           </label>
         </div>
 
         <button onClick={handleCreate} disabled={loading || selectedTypes.length === 0}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-600 text-white py-3 text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 transition-colors">
           {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
           TẠO BÀI TẬP
         </button>
@@ -100,9 +103,12 @@ export function QuizSetup() {
         </div>
         <div className="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto pr-1">
           {QUESTION_TYPES.map(t => (
-            <label key={t} className="flex items-center gap-2 cursor-pointer p-2 rounded-xl hover:bg-muted transition-colors">
+            <label key={t} className={cn(
+              'flex items-center gap-2 cursor-pointer p-2 rounded-xl border transition-colors',
+              selectedTypes.includes(t) ? 'border-brand-300 bg-brand-50' : 'border-transparent hover:bg-muted',
+            )}>
               <input type="checkbox" checked={selectedTypes.includes(t)} onChange={() => toggleType(t)} className="accent-primary" />
-              <span className="text-sm">{t}</span>
+              <span className="text-sm leading-tight">{t}</span>
             </label>
           ))}
         </div>

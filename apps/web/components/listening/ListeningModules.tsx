@@ -1,10 +1,10 @@
 import { Headphones, MessageCircle, MessagesSquare, Mic } from 'lucide-react'
 
 const modules = [
-  { label: 'Dictation', icon: Headphones, description: 'Sẽ mở sau.' },
-  { label: 'Question Response', icon: MessageCircle, description: 'Sẽ mở sau.' },
-  { label: 'Conversation', icon: MessagesSquare, description: 'Sẽ mở sau.' },
-  { label: 'Talk', icon: Mic, description: 'Sẽ mở sau.' },
+  { label: 'Dictation', icon: Headphones, description: 'Nghe và chép lại chính xác từng câu theo cấp độ.' },
+  { label: 'Question Response', icon: MessageCircle, description: 'Nghe câu hỏi ngắn và chọn câu trả lời phù hợp.' },
+  { label: 'Conversation', icon: MessagesSquare, description: 'Nghe hội thoại thực tế và trả lời câu hỏi nội dung.' },
+  { label: 'Talk', icon: Mic, description: 'Nghe bài nói dài, luyện nắm ý chính và chi tiết.' },
 ]
 
 export function ListeningModules() {

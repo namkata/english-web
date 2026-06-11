@@ -318,6 +318,22 @@ const A2_TRAVEL: VocabWord[] = [
   { id: 'a2t010', word: 'straight', phoneticUk: '/streɪt/', phoneticUs: '/streɪt/', partOfSpeech: 'adverb', definition: 'thẳng', exampleSentence: 'Go straight and then turn left.' },
 ]
 
+// ── TOEIC 600 Essential Words ──────────────────────────────
+const TOEIC_600: VocabWord[] = [
+  { id: 'tx001', word: 'contract', phoneticUk: '/ˈkɒntrækt/', phoneticUs: '/ˈkɑːntrækt/', partOfSpeech: 'noun', definition: 'hợp đồng', exampleSentence: 'Both parties signed the contract yesterday.' },
+  { id: 'tx002', word: 'negotiate', phoneticUk: '/nɪˈɡəʊʃieɪt/', phoneticUs: '/nɪˈɡoʊʃieɪt/', partOfSpeech: 'verb', definition: 'đàm phán, thương lượng', exampleSentence: 'We need to negotiate a better price.' },
+  { id: 'tx003', word: 'invoice', phoneticUk: '/ˈɪnvɔɪs/', phoneticUs: '/ˈɪnvɔɪs/', partOfSpeech: 'noun', definition: 'hóa đơn', exampleSentence: 'Please send the invoice by the end of the month.' },
+  { id: 'tx004', word: 'shipment', phoneticUk: '/ˈʃɪpmənt/', phoneticUs: '/ˈʃɪpmənt/', partOfSpeech: 'noun', definition: 'lô hàng, việc vận chuyển', exampleSentence: 'The shipment will arrive next Tuesday.' },
+  { id: 'tx005', word: 'applicant', phoneticUk: '/ˈæplɪkənt/', phoneticUs: '/ˈæplɪkənt/', partOfSpeech: 'noun', definition: 'ứng viên', exampleSentence: 'We interviewed ten applicants for the position.' },
+  { id: 'tx006', word: 'promotion', phoneticUk: '/prəˈməʊʃən/', phoneticUs: '/prəˈmoʊʃən/', partOfSpeech: 'noun', definition: 'thăng chức; khuyến mãi', exampleSentence: 'She received a promotion after two years.' },
+  { id: 'tx007', word: 'deadline', phoneticUk: '/ˈdedlaɪn/', phoneticUs: '/ˈdedlaɪn/', partOfSpeech: 'noun', definition: 'hạn chót', exampleSentence: 'The deadline for the report is Friday.' },
+  { id: 'tx008', word: 'schedule', phoneticUk: '/ˈʃedjuːl/', phoneticUs: '/ˈskedʒuːl/', partOfSpeech: 'noun', definition: 'lịch trình', exampleSentence: 'Check the meeting schedule before booking.' },
+  { id: 'tx009', word: 'refund', phoneticUk: '/ˈriːfʌnd/', phoneticUs: '/ˈriːfʌnd/', partOfSpeech: 'noun', definition: 'tiền hoàn lại', exampleSentence: 'You can request a refund within 30 days.' },
+  { id: 'tx010', word: 'warranty', phoneticUk: '/ˈwɒrənti/', phoneticUs: '/ˈwɔːrənti/', partOfSpeech: 'noun', definition: 'bảo hành', exampleSentence: 'The laptop comes with a two-year warranty.' },
+  { id: 'tx011', word: 'inventory', phoneticUk: '/ˈɪnvəntri/', phoneticUs: '/ˈɪnvəntɔːri/', partOfSpeech: 'noun', definition: 'hàng tồn kho', exampleSentence: 'We check the inventory every quarter.' },
+  { id: 'tx012', word: 'revenue', phoneticUk: '/ˈrevənjuː/', phoneticUs: '/ˈrevənuː/', partOfSpeech: 'noun', definition: 'doanh thu', exampleSentence: 'Company revenue increased by 15% this year.' },
+]
+
 // ── Aggregate all sets ─────────────────────────────────────
 export const VOCAB_SETS: Array<{ set: VocabSet; words: VocabWord[] }> = [
   { set: { id: 'a1-greetings', name: 'A1 - Greetings & Introductions', description: 'Chào hỏi, giới thiệu, cảm xúc cơ bản', level: 'A1', totalWords: 30, learnedWords: 0, progressPercent: 0, lastStudiedAt: null }, words: A1_GREETINGS },
@@ -334,6 +350,7 @@ export const VOCAB_SETS: Array<{ set: VocabSet; words: VocabWord[] }> = [
   { set: { id: 'a1-clothes', name: 'A1 - Clothes & Colors', description: 'Quần áo, màu sắc, kích thước', level: 'A1', totalWords: 15, learnedWords: 0, progressPercent: 0, lastStudiedAt: null }, words: A1_CLOTHES },
   { set: { id: 'a1-numbers', name: 'A1 - Numbers & Time', description: 'Số đếm, thời gian, ngày tháng', level: 'A1', totalWords: 15, learnedWords: 0, progressPercent: 0, lastStudiedAt: null }, words: A1_NUMBERS },
   { set: { id: 'a2-travel', name: 'A2 - Travel & Directions', description: 'Du lịch, chỉ đường, phương hướng', level: 'A2', totalWords: 10, learnedWords: 0, progressPercent: 0, lastStudiedAt: null }, words: A2_TRAVEL },
+  { set: { id: 'toeic-600', name: 'TOEIC 600 Essential Words', description: 'Từ vựng thiết yếu cho mục tiêu TOEIC 600', level: 'B1', totalWords: 12, learnedWords: 5, progressPercent: 42, lastStudiedAt: '2026-06-10T09:00:00Z' }, words: TOEIC_600 },
 ]
 
 export const TOTAL_WORDS = VOCAB_SETS.reduce((sum, s) => sum + s.words.length, 0)

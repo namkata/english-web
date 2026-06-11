@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, PenLine, BookOpen, FileText, ClipboardList,
   Headphones, Volume2, Settings, MessageSquare, Users,
+  PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -28,16 +30,25 @@ interface Props {
 
 export function Sidebar({ className }: Props) {
   const pathname = usePathname()
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <aside
       className={cn(
-        'w-64 min-h-screen border-r border-border flex flex-col gap-1 p-4 sticky top-0',
+        'min-h-screen border-r border-border flex flex-col gap-1 p-4 sticky top-0 transition-all duration-200',
+        collapsed ? 'w-[72px]' : 'w-64',
         className,
       )}
     >
-      <div className="mb-6 px-3">
-        <span className="text-xl font-bold text-primary">English Web</span>
+      <div className={cn('mb-6 flex items-center', collapsed ? 'justify-center' : 'justify-between px-3')}>
+        {!collapsed && <span className="text-xl font-bold text-primary">English Web</span>}
+        <button
+          onClick={() => setCollapsed(c => !c)}
+          className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          title={collapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
+        >
+          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        </button>
       </div>
 
       {navItems.map(({ href, label, icon: Icon }) => {
@@ -46,15 +57,17 @@ export function Sidebar({ className }: Props) {
           <Link
             key={href}
             href={href}
+            title={collapsed ? label : undefined}
             className={cn(
               'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
+              collapsed && 'justify-center px-0',
               isActive
                 ? 'bg-brand-50 text-brand-700'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )}
           >
-            <Icon size={18} strokeWidth={isActive ? 2.5 : 1.75} />
-            {label}
+            <Icon size={18} strokeWidth={isActive ? 2.5 : 1.75} className="flex-shrink-0" />
+            {!collapsed && label}
           </Link>
         )
       })}
