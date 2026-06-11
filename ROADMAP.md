@@ -1,6 +1,6 @@
 # Implementation Plan / Roadmap — English Web
 
-> Cập nhật: 2026-06-04 sau khi fix xong lỗi dev server, CSS, build, và mock data cơ bản.
+> Cập nhật: 2026-06-11 — hoàn thành Sprint 1 (UI polish), Sprint 2 (auth refresh + SRS review API), Sprint 5 (migrations, rate limit, compose, CI) và tech debt (ui/types packages, Next 15.5.19, recharts 3, vitest).
 
 ---
 
@@ -9,43 +9,43 @@
 Mục tiêu: Tinh chỉnh layout, spacing, typography, colors và thiếu component cho khớp design gốc.
 
 ### Dashboard
-- [ ] Heatmap: Thêm nhiều mock data hơn (91 ngày với gradient intensity) để grid đầy màu
-- [ ] Header: Thêm avatar user, notification badge với số đếm
-- [ ] XP Progress: Thanh progress bar đúng màu brand, thêm icon flame/ streak đúng style
-- [ ] Daily Challenges: Checkbox style tròn thay vì vuông; chevron arrow đúng vị trí
-- [ ] Weekly Ranking: Nền màu xanh nhạt đúng như screenshot (bg-accent/40 → đổi thành màu xanh mint)
-- [ ] Learning Modules: Thêm icon nền mờ (ghost icon) bên phải mỗi card; tags có màu riêng (vàng, xanh, cam)
+- [x] Heatmap: Thêm nhiều mock data hơn (91 ngày với gradient intensity) để grid đầy màu
+- [x] Header: Thêm avatar user, notification badge với số đếm
+- [x] XP Progress: Thanh progress bar đúng màu brand, thêm icon flame/ streak đúng style
+- [x] Daily Challenges: Checkbox style tròn thay vì vuông; chevron arrow đúng vị trí
+- [x] Weekly Ranking: Nền màu xanh nhạt đúng như screenshot (bg-accent/40 → đổi thành màu xanh mint)
+- [x] Learning Modules: Thêm icon nền mờ (ghost icon) bên phải mỗi card; tags có màu riêng (vàng, xanh, cam)
 
 ### Reading
-- [ ] Passage card: Badge "Vừa / Ngắn / Dài" + "7 câu" nằm cùng hàng, style pill màu xanh mint
-- [ ] AI Generate Card: Thêm icon sparkle lớn bên phải, nền gradient xanh nhạt
-- [ ] Level Filter: A1 badge active màu đen, các level khác viền xám
-- [ ] Thêm mock data đủ 6 bài đọc đầu tiên (hiện tại chỉ có text, thiếu content đầy đủ)
+- [x] Passage card: Badge "Vừa / Ngắn / Dài" + "7 câu" nằm cùng hàng, style pill màu xanh mint
+- [x] AI Generate Card: Thêm icon sparkle lớn bên phải, nền gradient xanh nhạt
+- [x] Level Filter: A1 badge active màu đen, các level khác viền xám
+- [x] Thêm mock data đủ 6 bài đọc đầu tiên (hiện tại chỉ có text, thiếu content đầy đủ)
 
 ### Writing
-- [ ] Button "Bắt đầu luyện viết từng câu": Đổi thành style primary đậm, có icon arrow
-- [ ] Step cards: Viền selected màu brand-500, nền brand-50
-- [ ] Thêm link "Xem gói AI hệ thống" + "thêm API riêng" bên dưới form
+- [x] Button "Bắt đầu luyện viết từng câu": Đổi thành style primary đậm, có icon arrow
+- [x] Step cards: Viền selected màu brand-500, nền brand-50
+- [x] Thêm link "Xem gói AI hệ thống" + "thêm API riêng" bên dưới form
 
 ### Vocabulary
-- [ ] Header đúng: "Bộ từ của tôi" + button "+ Thêm từ" màu primary
-- [ ] Word detail cards: Hiển thị từng từ với IPA UK/US, loại từ, nghĩa, ví dụ, ảnh minh họa, trạng thái "Đã thuộc / Mới"
-- [ ] Sidebar bộ từ: Progress bar đúng màu, số % nổi bật
-- [ ] Thêm mock data cho ~12 từ trong bộ TOEIC 600
+- [x] Header đúng: "Bộ từ của tôi" + button "+ Thêm từ" màu primary
+- [x] Word detail cards: Hiển thị từng từ với IPA UK/US, loại từ, nghĩa, ví dụ, ảnh minh họa, trạng thái "Đã thuộc / Mới"
+- [x] Sidebar bộ từ: Progress bar đúng màu, số % nổi bật
+- [x] Thêm mock data cho ~12 từ trong bộ TOEIC 600
 
 ### Quiz
-- [ ] Checkbox list: Style đẹp hơn, 2 cột đều, scroll nếu quá dài
-- [ ] Button "Tạo bài tập": Icon sparkle, màu primary đậm
-- [ ] Chế độ thi: Card viền nhẹ, mô tả rõ ràng hơn
+- [x] Checkbox list: Style đẹp hơn, 2 cột đều, scroll nếu quá dài
+- [x] Button "Tạo bài tập": Icon sparkle, màu primary đậm
+- [x] Chế độ thi: Card viền nhẹ, mô tả rõ ràng hơn
 
 ### Listening
-- [ ] 4 module cards: Icon bên trái, "Coming soon" badge màu amber, mô tả ngắn gọn
-- [ ] Header card: Icon Headphones, badge "Đang hoàn thiện", title lớn
+- [x] 4 module cards: Icon bên trái, "Coming soon" badge màu amber, mô tả ngắn gọn
+- [x] Header card: Icon Headphones, badge "Đang hoàn thiện", title lớn
 
 ### Navigation & Global
-- [ ] BottomNav: Đảm bảo đúng 5 tab chính + "Thêm" (6 nút), icon outline khi inactive, solid khi active
-- [ ] QuickNavModal: Grid 3x3 hoặc 3x4, mỗi item có icon + label, nút "Đăng xuất" màu đỏ riêng biệt, overlay blur
-- [ ] Sidebar desktop: Có thể collapse, highlight active item với nền brand-50
+- [x] BottomNav: Đảm bảo đúng 5 tab chính + "Thêm" (6 nút), icon outline khi inactive, solid khi active
+- [x] QuickNavModal: Grid 3x3 hoặc 3x4, mỗi item có icon + label, nút "Đăng xuất" màu đỏ riêng biệt, overlay blur
+- [x] Sidebar desktop: Có thể collapse, highlight active item với nền brand-50
 
 ---
 
@@ -55,33 +55,33 @@ Mục tiêu: Kết nối frontend với các Go/Python services để data thự
 
 ### Auth Service (`services/auth-service`)
 - [ ] Chạy `make dev-auth` hoặc `go run` thành công
-- [ ] Fix login API trả về đúng token (access + refresh)
-- [ ] Fix register flow
+- [x] Fix login API trả về đúng token (access + refresh)
+- [x] Fix register flow
 - [ ] OAuth Google callback hoạt động
-- [ ] Middleware auth cho dashboard routes
+- [x] Middleware auth cho dashboard routes
 
 ### Content Service (`services/content-service`)
-- [ ] API `GET /api/v1/reading/passages` — list passages theo level
-- [ ] API `GET /api/v1/reading/passages/:id` — get passage + questions
-- [ ] API `POST /api/v1/reading/passages/:id/submit` — submit answers
+- [x] API `GET /api/v1/reading/passages` — list passages theo level
+- [x] API `GET /api/v1/reading/passages/:id` — get passage + questions
+- [x] API `POST /api/v1/reading/passages/:id/submit` — submit answers
 
 ### AI Service (`services/ai-service`)
-- [ ] API `POST /api/v1/writing/generate` — tạo đoạn văn theo topic + level
-- [ ] API `POST /api/v1/writing/feedback` — chấm điểm câu viết
-- [ ] API `POST /api/v1/quiz/generate` — tạo quiz theo loại câu hỏi
-- [ ] Cấu hình AI provider (OpenAI/Anthropic) qua settings
+- [x] API `POST /api/v1/writing/generate` — tạo đoạn văn theo topic + level
+- [x] API `POST /api/v1/writing/feedback` — chấm điểm câu viết
+- [x] API `POST /api/v1/quiz/generate` — tạo quiz theo loại câu hỏi
+- [x] Cấu hình AI provider (OpenAI/Anthropic) qua settings
 
 ### Vocabulary Service
-- [ ] API `GET /api/v1/vocabulary/sets` — list sets
-- [ ] API `GET /api/v1/vocabulary/sets/:id/words` — words in set
-- [ ] API `POST /api/v1/vocabulary/words/:id/learn` — mark as learned
-- [ ] API `POST /api/vocabulary/words/:id/review` — spaced repetition review
+- [x] API `GET /api/v1/vocabulary/sets` — list sets
+- [x] API `GET /api/v1/vocabulary/sets/:id/words` — words in set
+- [x] API `POST /api/v1/vocabulary/words/:id/learn` — mark as learned
+- [x] API `POST /api/vocabulary/words/:id/review` — spaced repetition review
 
 ### Gamification Service
-- [ ] API `GET /api/v1/gamification/stats` — XP, streak, rank
-- [ ] API `GET /api/v1/gamification/challenges` — daily challenges
-- [ ] API `GET /api/v1/gamification/activity` — heatmap data
-- [ ] API `GET /api/v1/gamification/leaderboard` — weekly ranking
+- [x] API `GET /api/v1/gamification/stats` — XP, streak, rank
+- [x] API `GET /api/v1/gamification/challenges` — daily challenges
+- [x] API `GET /api/v1/gamification/activity` — heatmap data
+- [x] API `GET /api/v1/gamification/leaderboard` — weekly ranking
 
 ---
 
@@ -141,11 +141,11 @@ Mục tiêu: Người dùng có thể thực sự làm bài tập, nhận feedba
 
 ## Sprint 5: DevOps & Production Ready (Priority: MEDIUM)
 
-- [ ] Docker Compose full stack: `docker compose up` chạy tất cả services
-- [ ] CI/CD GitHub Actions: Lint + Test + Build cho Go, Python, TypeScript
-- [ ] Database migrations với `golang-migrate` cho tất cả Go services
-- [ ] Health checks cho mọi service
-- [ ] Rate limiting cho auth và AI endpoints
+- [x] Docker Compose full stack: `docker compose up` chạy tất cả services
+- [x] CI/CD GitHub Actions: Lint + Test + Build cho Go, Python, TypeScript
+- [x] Database migrations với `golang-migrate` cho tất cả Go services
+- [x] Health checks cho mọi service
+- [x] Rate limiting cho auth và AI endpoints
 - [ ] Production build optimizations (image, font, bundle)
 - [ ] Deploy lên staging server
 
@@ -153,14 +153,23 @@ Mục tiêu: Người dùng có thể thực sự làm bài tập, nhận feedba
 
 ## Bug Fixes Còn Tồn Đọng (Tech Debt)
 
-- [ ] Restore auth redirect trong `app/(dashboard)/layout.tsx` khi backend auth chạy ổn định
-- [ ] `@english-web/ui` package: Hiện tại chỉ có Button, cần thêm Card, Badge, Input, Select, Dialog
-- [ ] `@english-web/types` package: Thêm đầy đủ Zod schemas cho writing, reading, quiz, vocab
-- [ ] Upgrade Next.js 15.1.0 → 15.x patched (CVE-2025-66478)
-- [ ] Upgrade `recharts` lên v3
+- [x] Restore auth redirect trong `app/(dashboard)/layout.tsx` khi backend auth chạy ổn định
+- [x] `@english-web/ui` package: Hiện tại chỉ có Button, cần thêm Card, Badge, Input, Select, Dialog
+- [x] `@english-web/types` package: Thêm đầy đủ Zod schemas cho writing, reading, quiz, vocab
+- [x] Upgrade Next.js 15.1.0 → 15.x patched (CVE-2025-66478)
+- [x] Upgrade `recharts` lên v3
 - [ ] Unit tests cho tất cả service functions (theo AGENTS.md rule)
 
 ---
+
+
+## Ghi chú triển khai (2026-06-11)
+
+- Content/Vocabulary/Gamification APIs hiện chạy qua Next.js API routes (BFF) với seed data — sẽ chuyển sang Go services khi `content-service`/`gamification-service` được dựng.
+- `docker compose up` chỉ chạy các service đã có code (postgres, redis, minio, auth, ai, web); các service tương lai nằm sau profile `future`.
+- OAuth Google cần `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` trong `.env` để hoạt động.
+- Rate limit hiện in-memory per-instance; chuyển sang Redis sliding window tại API gateway khi scale nhiều replica.
+- Unit tests: vitest cho `lib/srs.ts`, `lib/utils.ts` (web); pytest ai-service pass. Cần mở rộng coverage cho components và Go handlers.
 
 ## Tiêu chí hoàn thành sprint
 

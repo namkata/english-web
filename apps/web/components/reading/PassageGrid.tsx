@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { BookOpen } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { apiClient } from '@/lib/api-client'
 
 export function PassageGrid() {

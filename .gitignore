@@ -60,3 +60,6 @@ venv/
 *.pem
 *.key
 .vercel
+
+# pnpm store (local cache)
+.pnpm-store/

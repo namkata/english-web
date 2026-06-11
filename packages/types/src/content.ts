@@ -94,6 +94,25 @@ export const ExerciseTypeSchema = z.enum([
   'find_meaning_in_context',
 ])
 
+// ---- Spaced repetition (SM-2) ----
+
+export const SrsCardSchema = z.object({
+  wordId: z.string(),
+  repetitions: z.number().int().min(0),
+  ease: z.number().min(1.3),
+  intervalDays: z.number().min(0),
+  dueDate: z.string().datetime(),
+  lastReviewedAt: z.string().datetime().nullable(),
+})
+
+export const ReviewWordSchema = z.object({
+  quality: z.number().int().min(0).max(5),
+  card: SrsCardSchema.optional(),
+})
+
+export type SrsCardDto = z.infer<typeof SrsCardSchema>
+export type ReviewWordInput = z.infer<typeof ReviewWordSchema>
+
 export type ReadingPassage = z.infer<typeof ReadingPassageSchema>
 export type ReadingPassageDetail = z.infer<typeof ReadingPassageDetailSchema>
 export type QuizQuestion = z.infer<typeof QuizQuestionSchema>

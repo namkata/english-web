@@ -1,1 +1,11 @@
 export { Button } from './button';
+export type { ButtonProps } from './button';
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
+export { Badge } from './badge';
+export type { BadgeProps } from './badge';
+export { Input } from './input';
+export type { InputProps } from './input';
+export { Select } from './select';
+export type { SelectProps, SelectOption } from './select';
+export { Dialog } from './dialog';
+export type { DialogProps } from './dialog';
