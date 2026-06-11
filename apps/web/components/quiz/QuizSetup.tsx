@@ -31,8 +31,14 @@ export function QuizSetup() {
 
   const handleCreate = async () => {
     setLoading(true)
-    await new Promise(r => setTimeout(r, 800))
-    router.push('/quiz/session/demo')
+    const params = new URLSearchParams({
+      examMode: String(examMode),
+      count: String(count),
+      level,
+      source,
+    })
+    if (selectedTypes.length) params.set('types', selectedTypes.join('|'))
+    router.push(`/quiz/session/new?${params.toString()}`)
   }
 
   return (

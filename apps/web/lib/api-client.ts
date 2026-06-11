@@ -33,6 +33,28 @@ const http = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+/**
+ * Unwrap the standard API envelope `{ success, data }` so callers receive the
+ * inner payload directly (matching the typed return signatures below).
+ * - On `{ success: false, error }` the promise rejects with a readable message.
+ * - Responses without a `success` field (e.g. auth provider) pass through unchanged.
+ */
+http.interceptors.response.use(response => {
+  const body = response.data as
+    | { success?: boolean; data?: unknown; error?: { message?: string }; message?: string }
+    | undefined
+  if (body && typeof body === 'object' && 'success' in body) {
+    if (body.success === false) {
+      const message = body.error?.message ?? body.message ?? 'Đã xảy ra lỗi khi gọi máy chủ.'
+      return Promise.reject(new Error(message))
+    }
+    if ('data' in body) {
+      response.data = body.data
+    }
+  }
+  return response
+})
+
 // ---- Auth ----
 const auth = {
   login: async (data: LoginInput) => {
@@ -121,8 +143,8 @@ const gamification = {
     const res = await http.get<UserStats>('/gamification/me')
     return res.data
   },
-  getLeaderboard: async () => {
-    const res = await http.get<LeaderboardEntry[]>('/gamification/leaderboard')
+  getLeaderboard: async (period: 'weekly' | 'monthly' | 'all' = 'weekly') => {
+    const res = await http.get<LeaderboardEntry[]>('/gamification/leaderboard', { params: { period } })
     return res.data
   },
   getTodayChallenges: async () => {
@@ -152,4 +174,38 @@ const user = {
   },
 }
 
-export const apiClient = { auth, reading, vocabulary, quiz, writing, gamification, user }
+// ---- Feedback ----
+export interface FeedbackInput {
+  type: 'feature' | 'general' | 'bug'
+  name: string
+  contact: string
+  content: string
+}
+
+const feedback = {
+  submit: async (data: FeedbackInput) => {
+    const res = await http.post<{ id: string; receivedAt: string }>('/feedback', data)
+    return res.data
+  },
+}
+
+// ---- Community ----
+export interface CommunityFeedPost {
+  id: string
+  authorId: string
+  type: 'writing' | 'question'
+  content: string
+  likes: number
+  comments: number
+  createdAt: string
+  author: { id: string; name: string; level: string } | null
+}
+
+const community = {
+  getFeed: async () => {
+    const res = await http.get<{ items: CommunityFeedPost[]; total: number }>('/community/feed')
+    return res.data
+  },
+}
+
+export const apiClient = { auth, reading, vocabulary, quiz, writing, gamification, user, feedback, community }

@@ -90,52 +90,52 @@ Mục tiêu: Kết nối frontend với các Go/Python services để data thự
 Mục tiêu: Người dùng có thể thực sự làm bài tập, nhận feedback, và lưu tiến độ.
 
 ### Reading Flow
-- [ ] Trang làm bài `/reading/[id]`: Hiển thị passage + multiple choice questions
-- [ ] Submit answers, show score, explanation cho từng câu sai
-- [ ] Lưu lịch sử làm bài
+- [x] Trang làm bài `/reading/[id]`: Hiển thị passage + multiple choice questions
+- [x] Submit answers, show score, explanation cho từng câu sai
+- [x] Lưu lịch sử làm bài
 
 ### Writing Flow
-- [ ] Trang session `/writing/session/[id]`: Hiển thị đoạn văn gốc + input viết lại từng câu
-- [ ] Gọi AI feedback sau mỗi câu: điểm grammar, structure, vocabulary
-- [ ] Trang session cho "Luyện viết lại câu" (paraphrase)
-- [ ] Lưu lịch sử bài viết
+- [x] Trang session `/writing/session/[id]`: Hiển thị đoạn văn gốc + input viết lại từng câu
+- [x] Gọi AI feedback sau mỗi câu: điểm grammar, structure, vocabulary
+- [x] Trang session cho "Luyện viết lại câu" (paraphrase)
+- [x] Lưu lịch sử bài viết
 
 ### Quiz Flow
-- [ ] Trang làm bài `/quiz/session/[id]`: Timer, từng câu hỏi 1
-- [ ] Chế độ thi: Full screen, strict timer, cảnh báo rời trang
-- [ ] Submit, show score breakdown theo loại câu hỏi
-- [ ] Review sai
+- [x] Trang làm bài `/quiz/session/[id]`: Timer, từng câu hỏi 1
+- [x] Chế độ thi: Full screen, strict timer, cảnh báo rời trang
+- [x] Submit, show score breakdown theo loại câu hỏi
+- [x] Review sai
 
 ### Vocabulary Flow
-- [ ] Flashcard mode: Flip card (Anh ↔ Việt), swipe gestures
-- [ ] Spaced repetition algorithm: SM-2 hoặc tương đương
-- [ ] "Thêm từ mới": Form thêm từ + nghĩa + ví dụ
-- [ ] Word bank: Từ điển cá nhân với search, filter theo trạng thái
+- [x] Flashcard mode: Flip card (Anh ↔ Việt), swipe gestures
+- [x] Spaced repetition algorithm: SM-2 hoặc tương đương
+- [x] "Thêm từ mới": Form thêm từ + nghĩa + ví dụ
+- [x] Word bank: Từ điển cá nhân với search, filter theo trạng thái
 
 ---
 
 ## Sprint 4: Polish & Advanced Features (Priority: MEDIUM)
 
 ### Settings Pages
-- [ ] `/settings` — Hồ sơ: Cập nhật tên, avatar, mật khẩu
-- [ ] `/settings/ai-provider` — Thêm/xóa/sửa AI provider (API key, model, base URL)
-- [ ] `/settings/dictionary` — Chọn nguồn tra từ mặc định
-- [ ] `/settings/plan` — Thông tin gói AI, upgrade flow
-- [ ] `/settings/writing-history` — Bảng lịch sử bài viết
-- [ ] `/settings/stats` — Thống kê nhanh (XP, streak, số bài)
-- [ ] `/settings/ai-usage` — Lịch sử gọi AI, token count
+- [x] `/settings` — Hồ sơ: tên, trình độ, mục tiêu, ngôn ngữ, nhắc nhở (mật khẩu chờ auth backend)
+- [x] `/settings/ai-provider` — Thêm/xóa/sửa AI provider (API key, model, base URL) — lưu trên thiết bị
+- [x] `/settings/dictionary` — Chọn nguồn tra từ mặc định
+- [x] `/settings/plan` — Thông tin gói AI, upgrade flow
+- [x] `/settings/writing-history` — Bảng lịch sử bài viết
+- [x] `/settings/stats` — Thống kê nhanh (XP, streak, số bài)
+- [x] `/settings/ai-usage` — Lịch sử gọi AI, token count
 
 ### Community & Social
-- [ ] `/community` — Feed chia sẻ bài viết, đặt câu hỏi
-- [ ] Leaderboard: Bảng xếp hạng tuần/tháng/tổng
-- [ ] Following feed
+- [x] `/community` — Feed chia sẻ bài viết, đặt câu hỏi
+- [x] Leaderboard: Bảng xếp hạng tuần/tháng/tổng
+- [x] Following feed
 
 ### Notifications
-- [ ] Realtime notification: WebSocket hoặc SSE
-- [ ] Push notification cho daily reminder, streak at risk
+- [x] Realtime notification: SSE stream + notification bell
+- [ ] Push notification cho daily reminder, streak at risk (cần service worker + Web Push)
 
 ### Feedback
-- [ ] Kết nối form feedback với backend (lưu DB, gửi email admin)
+- [x] Kết nối form feedback với backend route (lưu DB / email admin: chờ backend thật)
 
 ---
 

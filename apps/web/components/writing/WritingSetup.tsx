@@ -27,10 +27,11 @@ export function WritingSetup() {
 
   const handleStart = async () => {
     setLoading(true)
-    // TODO: call API to create writing session
-    await new Promise(r => setTimeout(r, 800))
-    router.push('/writing/session/demo')
+    const params = new URLSearchParams({ mode, topic, difficulty })
+    router.push(`/writing/session/new?${params.toString()}`)
   }
+
+  const startLabel = mode === 'sentence_rewrite' ? 'Bắt đầu luyện viết lại câu →' : 'Bắt đầu luyện viết từng câu →'
 
   return (
     <div className="rounded-2xl border bg-card p-6 space-y-6">
@@ -92,7 +93,7 @@ export function WritingSetup() {
         <button onClick={handleStart} disabled={!topic || loading}
           className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
           {loading && <Loader2 size={16} className="animate-spin" />}
-          Bắt đầu luyện viết từng câu →
+          {startLabel}
         </button>
         <p className="text-xs text-muted-foreground mt-2 text-center">
           Bạn cần có nguồn AI để sử dụng tính năng. <a href="/settings" className="text-primary hover:underline">Xem gói AI hệ thống</a> hoặc <a href="/settings" className="text-primary hover:underline">thêm API riêng</a>.

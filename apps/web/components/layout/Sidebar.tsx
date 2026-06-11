@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, PenLine, BookOpen, FileText, ClipboardList,
-  Headphones, Volume2, Settings, MessageSquare,
+  Headphones, Volume2, Settings, MessageSquare, Users,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +17,7 @@ const navItems = [
   { href: '/grammar',       label: 'Ngữ pháp',     icon: FileText },
   { href: '/pronunciation', label: 'Phát âm',      icon: Volume2 },
   { href: '/listening',     label: 'Luyện nghe',   icon: Headphones },
+  { href: '/community',     label: 'Cộng đồng',    icon: Users },
   { href: '/settings',      label: 'Cài đặt',      icon: Settings },
   { href: '/feedback',      label: 'Phản hồi',     icon: MessageSquare },
 ]

@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Lightbulb, MessageSquare, Bug, Send, Loader2, CheckCircle } from 'lucide-react'
+import { Lightbulb, MessageSquare, Bug, Send, Loader2, CheckCircle, AlertTriangle } from 'lucide-react'
 import { z } from 'zod'
 import { cn } from '@/lib/utils'
+import { apiClient } from '@/lib/api-client'
 
 const FeedbackSchema = z.object({
   type: z.enum(['feature', 'general', 'bug']),
@@ -30,6 +31,7 @@ const CONTENT_PLACEHOLDERS: Record<FeedbackInput['type'], string> = {
 
 export function FeedbackForm() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
@@ -45,10 +47,14 @@ export function FeedbackForm() {
   const selectedType = watch('type')
   const contentLength = watch('content')?.length ?? 0
 
-  const onSubmit = async (_data: FeedbackInput) => {
-    // TODO: call API when feedback endpoint is ready
-    await new Promise((r) => setTimeout(r, 1000))
-    setSubmitted(true)
+  const onSubmit = async (data: FeedbackInput) => {
+    setSubmitError(null)
+    try {
+      await apiClient.feedback.submit(data)
+      setSubmitted(true)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Gửi phản hồi thất bại. Vui lòng thử lại.')
+    }
   }
 
   if (submitted) {
@@ -138,6 +144,13 @@ export function FeedbackForm() {
         {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
         Gửi phản hồi
       </button>
+
+      {submitError && (
+        <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <AlertTriangle size={16} className="flex-shrink-0" />
+          {submitError}
+        </div>
+      )}
     </form>
   )
 }
