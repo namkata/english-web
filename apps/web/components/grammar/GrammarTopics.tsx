@@ -1,10 +1,19 @@
-const topics = [
-  { label: 'Mạo từ', count: 2 },
-  { label: 'Sự đồng nhất giữa chủ ngữ và động từ', count: 1 },
-  { label: 'Chọn giới từ', count: 1 },
-]
+'use client'
+
+import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/lib/api-client'
 
 export function GrammarTopics() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['grammar', 'topics'],
+    queryFn: () => apiClient.grammar.getTopics(),
+  })
+
+  if (isLoading) return <div className="h-32 rounded-2xl bg-muted animate-pulse" />
+
+  const topics = data?.topics ?? []
+  if (topics.length === 0) return null
+
   return (
     <div className="space-y-2">
       {topics.map(t => (

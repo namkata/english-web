@@ -19,7 +19,7 @@ export function WeeklyRanking() {
         {stats?.weeklyRank ? `Bạn đang ở #${stats.weeklyRank}` : 'Chưa xếp hạng'}
       </p>
       <Link
-        href={"/leaderboard" as any}
+        href="/leaderboard"
         className="mt-3 inline-block text-sm text-primary font-medium border border-primary/30 rounded-xl px-4 py-1.5 hover:bg-primary/10 transition-colors"
       >
         Xem bảng xếp hạng

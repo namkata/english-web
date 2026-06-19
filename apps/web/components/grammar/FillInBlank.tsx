@@ -1,66 +1,27 @@
 'use client'
 
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { CheckCircle2, XCircle, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-const EXERCISES = [
-  {
-    id: '1',
-    sentence: 'I ______ love you anymore.',
-    translation: 'Anh không còn yêu em nữa.',
-    answer: "don't",
-    grammarPoint: 'Phủ định với động từ thường (thì hiện tại đơn)',
-    hint: 'do + not',
-    fullSentence: "I don't love you anymore.",
-  },
-  {
-    id: '2',
-    sentence: 'She ______ to the gym every morning.',
-    translation: 'Cô ấy đi đến phòng gym mỗi buổi sáng.',
-    answer: 'goes',
-    grammarPoint: 'Động từ chia ở ngôi thứ 3 số ít (thì hiện tại đơn)',
-    hint: 'go + es',
-    fullSentence: 'She goes to the gym every morning.',
-  },
-  {
-    id: '3',
-    sentence: 'They ______ finished their homework yet.',
-    translation: 'Họ vẫn chưa làm xong bài tập về nhà.',
-    answer: "haven't",
-    grammarPoint: 'Phủ định thì hiện tại hoàn thành',
-    hint: 'have + not',
-    fullSentence: "They haven't finished their homework yet.",
-  },
-  {
-    id: '4',
-    sentence: 'If it ______ tomorrow, we will stay at home.',
-    translation: 'Nếu ngày mai trời mưa, chúng tôi sẽ ở nhà.',
-    answer: 'rains',
-    grammarPoint: 'Câu điều kiện loại 1 (If + present simple, will + V)',
-    hint: 'rain + s',
-    fullSentence: 'If it rains tomorrow, we will stay at home.',
-  },
-  {
-    id: '5',
-    sentence: 'I wish I ______ taller.',
-    translation: 'Tôi ước gì tôi cao hơn.',
-    answer: 'were',
-    grammarPoint: 'Câu ước với wish (hiện tại không có thật)',
-    hint: 'be → were',
-    fullSentence: 'I wish I were taller.',
-  },
-]
+import { apiClient } from '@/lib/api-client'
 
 export function FillInBlank() {
+  const { data: exercises = [], isLoading } = useQuery({
+    queryKey: ['grammar', 'fill-in-blank'],
+    queryFn: () => apiClient.grammar.getFillInBlank(),
+  })
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [input, setInput] = useState('')
   const [checked, setChecked] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [score, setScore] = useState({ correct: 0, total: 0 })
 
-  const exercise = EXERCISES[currentIndex]
-  if (!exercise) return <div className="text-muted-foreground">Không có bài tập.</div>
+  if (isLoading) return <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+  if (exercises.length === 0) return <div className="text-muted-foreground">Không có bài tập.</div>
+
+  const exercise = (exercises[currentIndex] ?? exercises[0])!
   const isCorrect = checked && input.trim().toLowerCase() === exercise.answer.toLowerCase()
 
   const handleCheck = () => {
@@ -71,7 +32,7 @@ export function FillInBlank() {
   }
 
   const handleNext = () => {
-    setCurrentIndex(i => (i + 1) % EXERCISES.length)
+    setCurrentIndex(i => (i + 1) % exercises.length)
     setInput('')
     setShowHint(false)
     setChecked(false)
@@ -82,7 +43,7 @@ export function FillInBlank() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-            Câu {currentIndex + 1}/{EXERCISES.length}
+            Câu {currentIndex + 1}/{exercises.length}
           </span>
         </div>
         <div className="text-sm text-muted-foreground">
@@ -90,18 +51,15 @@ export function FillInBlank() {
         </div>
       </div>
 
-      {/* Exercise Card */}
       <div className="rounded-2xl border bg-card p-6 space-y-5">
-        {/* Grammar Point */}
         <div className="flex items-center gap-2 p-3 rounded-xl bg-brand-50 border border-brand-100">
           <Lightbulb size={16} className="text-brand-500" />
           <span className="text-sm text-brand-700">{exercise.grammarPoint}</span>
         </div>
 
-        {/* Sentence */}
         <div className="space-y-3">
           <p className="text-lg font-medium leading-relaxed">
-            {exercise.sentence.split('______').map((part, i, arr) => (
+            {exercise.sentence.split('______').map((part: string, i: number, arr: string[]) => (
               <span key={i}>
                 {part}
                 {i < arr.length - 1 && (
@@ -127,14 +85,12 @@ export function FillInBlank() {
           <p className="text-sm text-muted-foreground italic">{exercise.translation}</p>
         </div>
 
-        {/* Hint */}
         {showHint && !checked && (
           <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
             <p className="text-sm text-amber-700">Gợi ý: {exercise.hint}</p>
           </div>
         )}
 
-        {/* Feedback */}
         {checked && (
           <div className="space-y-2">
             {isCorrect ? (
@@ -155,7 +111,6 @@ export function FillInBlank() {
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
           {!checked ? (
             <>

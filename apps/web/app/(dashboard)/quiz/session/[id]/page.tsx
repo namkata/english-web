@@ -3,8 +3,10 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CheckCircle2, XCircle, ArrowLeft, ArrowRight, Clock, AlertTriangle, Maximize2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 
 import { cn } from '@/lib/utils'
+import { apiClient } from '@/lib/api-client'
 import { useLearningStore } from '@/lib/stores/learning-store'
 
 interface BankQuestion {
@@ -27,21 +29,6 @@ const TYPE_LABELS: Record<string, string> = {
   passive_voice: 'Câu bị động',
 }
 
-const QUESTION_BANK: BankQuestion[] = [
-  { id: 'q1', type: 'choose_best_word', question: 'She _____ to school every day.', options: ['go', 'goes', 'going', 'gone'], correctAnswer: 'goes', explanation: 'Chủ ngữ ngôi thứ 3 số ít (She) → động từ thì hiện tại đơn thêm -s/-es.' },
-  { id: 'q2', type: 'choose_best_word', question: 'I _____ coffee to tea.', options: ['prefer', 'prefers', 'preferring', 'preferred'], correctAnswer: 'prefer', explanation: 'Chủ ngữ "I" → động từ thì hiện tại đơn giữ nguyên dạng.' },
-  { id: 'q3', type: 'fill_in_blank', question: 'They have _____ finished their homework.', options: [], correctAnswer: 'already', explanation: '"Already" dùng trong hiện tại hoàn thành để nhấn mạnh hành động đã xong.' },
-  { id: 'q4', type: 'grammar', question: 'He _____ to the gym yesterday.', options: ['go', 'goes', 'went', 'gone'], correctAnswer: 'went', explanation: '"Yesterday" là dấu hiệu quá khứ đơn. "go" → "went".' },
-  { id: 'q5', type: 'conditional', question: 'If it _____, we will stay at home.', options: ['rain', 'rains', 'rained', 'raining'], correctAnswer: 'rains', explanation: 'Câu điều kiện loại 1: If + S + V(s/es), S + will + V.' },
-  { id: 'q6', type: 'preposition', question: 'She is good _____ mathematics.', options: ['in', 'at', 'on', 'for'], correctAnswer: 'at', explanation: 'Collocation: "good at + something".' },
-  { id: 'q7', type: 'comparison', question: 'This book is _____ than that one.', options: ['interesting', 'more interesting', 'most interesting', 'interestinger'], correctAnswer: 'more interesting', explanation: 'Tính từ dài → so sánh hơn dùng "more + adj".' },
-  { id: 'q8', type: 'word_form', question: 'Her _____ surprised everyone. (decide)', options: ['decide', 'decided', 'decision', 'decisive'], correctAnswer: 'decision', explanation: 'Sau tính từ sở hữu "Her" cần một danh từ → "decision".' },
-  { id: 'q9', type: 'passive_voice', question: 'The letter _____ yesterday.', options: ['sent', 'was sent', 'is sent', 'sends'], correctAnswer: 'was sent', explanation: 'Bị động quá khứ đơn: was/were + V3.' },
-  { id: 'q10', type: 'fill_in_blank', question: 'I have lived here _____ 2010.', options: [], correctAnswer: 'since', explanation: '"Since + mốc thời gian" trong hiện tại hoàn thành.' },
-  { id: 'q11', type: 'grammar', question: 'There _____ many people at the party.', options: ['was', 'were', 'is', 'has'], correctAnswer: 'were', explanation: '"many people" số nhiều ở quá khứ → "were".' },
-  { id: 'q12', type: 'preposition', question: 'We arrived _____ the airport early.', options: ['to', 'in', 'at', 'on'], correctAnswer: 'at', explanation: '"arrive at + địa điểm cụ thể".' },
-]
-
 const SECONDS_PER_QUESTION = 45
 
 function formatTime(s: number) {
@@ -57,9 +44,14 @@ function QuizSession() {
 
   const examMode = search.get('examMode') === 'true'
   const level = search.get('level') || 'B1'
-  const count = Math.max(3, Math.min(QUESTION_BANK.length, Number(search.get('count')) || 5))
+  const count = Math.max(3, Math.min(50, Number(search.get('count')) || 5))
 
-  const questions = useMemo(() => QUESTION_BANK.slice(0, count), [count])
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['quiz', 'questions', level, count],
+    queryFn: () => apiClient.quiz.generateQuestions({ count, level }),
+  })
+
+  const questions = useMemo(() => data?.questions || [], [data])
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -71,7 +63,7 @@ function QuizSession() {
 
   const question = questions[currentIndex]
   const selectedAnswer = question ? answers[question.id] : undefined
-  const progress = ((currentIndex + 1) / questions.length) * 100
+  const progress = ((currentIndex + 1) / (questions.length || 1)) * 100
   const totalAnswered = Object.keys(answers).length
 
   const correctCount = useMemo(
@@ -92,7 +84,7 @@ function QuizSession() {
 
   const finish = useCallback(() => {
     setSubmitted(true)
-    if (!loggedRef.current) {
+    if (!loggedRef.current && questions.length > 0) {
       loggedRef.current = true
       logQuiz({
         level,
@@ -133,7 +125,11 @@ function QuizSession() {
     }
   }, [examMode, submitted])
 
-  if (!question) return null
+  if (!question || questions.length === 0) {
+    if (isLoading) return <div className="max-w-3xl mx-auto h-40 rounded-2xl bg-muted animate-pulse" />
+    if (error) return <div className="max-w-3xl mx-auto text-red-600 p-4 rounded-2xl border border-red-200">Lỗi khi tải câu hỏi: {error.message}</div>
+    return <div className="max-w-3xl mx-auto text-muted-foreground p-4 rounded-2xl border">Không có câu hỏi được tạo.</div>
+  }
 
   const handleSelect = (option: string) => {
     if (submitted) return

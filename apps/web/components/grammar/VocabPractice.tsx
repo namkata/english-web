@@ -1,58 +1,22 @@
 'use client'
 
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { ArrowRightLeft, CheckCircle2, XCircle, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { apiClient } from '@/lib/api-client'
 
 const DIRECTIONS = [
   { key: 'vi-en', label: 'Vi → En', desc: 'Nhìn tiếng Việt, viết tiếng Anh' },
   { key: 'en-vi', label: 'En → Vi', desc: 'Nhìn tiếng Anh, viết tiếng Việt' },
 ]
 
-const EXERCISES = [
-  {
-    id: '1',
-    vietnamese: 'Tôi bắt đầu một công việc mới.',
-    english: 'I start a new job.',
-    targetWord: 'start',
-    hint: 'I ___ a new job.',
-    type: 'verb',
-  },
-  {
-    id: '2',
-    vietnamese: 'Cô ấy đang làm việc ở văn phòng.',
-    english: 'She works at the office.',
-    targetWord: 'works',
-    hint: 'She ___ at the office.',
-    type: 'verb',
-  },
-  {
-    id: '3',
-    vietnamese: 'Họ đã hoàn thành dự án hôm qua.',
-    english: 'They finished the project yesterday.',
-    targetWord: 'finished',
-    hint: 'They ___ the project yesterday.',
-    type: 'verb',
-  },
-  {
-    id: '4',
-    vietnamese: 'Anh ấy không thích cà phê.',
-    english: "He doesn't like coffee.",
-    targetWord: "doesn't like",
-    hint: 'He ___ coffee.',
-    type: 'phrase',
-  },
-  {
-    id: '5',
-    vietnamese: 'Chúng tôi sẽ gặp nhau vào cuối tuần.',
-    english: 'We will meet at the weekend.',
-    targetWord: 'will meet',
-    hint: 'We ___ at the weekend.',
-    type: 'phrase',
-  },
-]
-
 export function VocabPractice() {
+  const { data: exercises = [], isLoading } = useQuery({
+    queryKey: ['grammar', 'vocab-exercises'],
+    queryFn: () => apiClient.grammar.getVocabExercises(),
+  })
+
   const [direction, setDirection] = useState('vi-en')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [input, setInput] = useState('')
@@ -60,10 +24,11 @@ export function VocabPractice() {
   const [checked, setChecked] = useState(false)
   const [score, setScore] = useState({ correct: 0, total: 0 })
 
-  const exercise = EXERCISES[currentIndex]
-  if (!exercise) return <div className="text-muted-foreground">Không có bài tập.</div>
-  const isViEn = direction === 'vi-en'
+  if (isLoading) return <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+  if (exercises.length === 0) return <div className="text-muted-foreground">Không có bài tập.</div>
 
+  const exercise = (exercises[currentIndex] ?? exercises[0])!
+  const isViEn = direction === 'vi-en'
   const prompt = isViEn ? exercise.vietnamese : exercise.english
   const target = isViEn ? exercise.english : exercise.vietnamese
   const hint = isViEn ? exercise.hint : exercise.vietnamese
@@ -76,7 +41,7 @@ export function VocabPractice() {
   }
 
   const handleNext = () => {
-    setCurrentIndex(i => (i + 1) % EXERCISES.length)
+    setCurrentIndex(i => (i + 1) % exercises.length)
     setInput('')
     setShowAnswer(false)
     setChecked(false)
@@ -86,7 +51,6 @@ export function VocabPractice() {
 
   return (
     <div className="space-y-4">
-      {/* Direction Selector */}
       <div className="flex items-center gap-3">
         {DIRECTIONS.map(d => (
           <button
@@ -113,24 +77,21 @@ export function VocabPractice() {
         </div>
       </div>
 
-      {/* Exercise Card */}
       <div className="rounded-2xl border bg-card p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-            Câu {currentIndex + 1}/{EXERCISES.length}
+            Câu {currentIndex + 1}/{exercises.length}
           </span>
           <span className="text-xs text-muted-foreground">
             Từ mục tiêu: <span className="font-semibold text-foreground">{exercise.targetWord}</span>
           </span>
         </div>
 
-        {/* Prompt */}
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">{isViEn ? 'Dịch sang tiếng Anh:' : 'Dịch sang tiếng Việt:'}</p>
           <p className="text-lg font-medium">{prompt}</p>
         </div>
 
-        {/* Hint */}
         {!checked && (
           <div className="space-y-2">
             <p className="text-xs text-muted-foreground">Gợi ý:</p>
@@ -138,7 +99,6 @@ export function VocabPractice() {
           </div>
         )}
 
-        {/* Input */}
         <div className="space-y-2">
           <input
             value={input}
@@ -154,8 +114,6 @@ export function VocabPractice() {
                 : 'border-input bg-background',
             )}
           />
-
-          {/* Feedback */}
           {checked && (
             <div className="flex items-center gap-2">
               {isCorrect ? (
@@ -171,7 +129,6 @@ export function VocabPractice() {
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
           {!checked ? (
             <>
@@ -200,7 +157,6 @@ export function VocabPractice() {
           )}
         </div>
 
-        {/* Show Answer */}
         {showAnswer && !checked && (
           <div className="p-3 rounded-xl bg-green-50 border border-green-200">
             <p className="text-sm text-green-700">Đáp án: {target}</p>

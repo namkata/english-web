@@ -1,153 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { CheckCircle2, XCircle, Shuffle, BookOpen, Lightbulb, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-interface Session {
-  id: string
-  title: string
-  formula: string
-  formulaVi: string
-  explanation: string
-  examples: Array<{ en: string; vi: string }>
-  exercises: Array<{
-    id: string
-    scrambled: string[]
-    answer: string
-    translation: string
-  }>
-}
-
-const SESSIONS: Session[] = [
-  {
-    id: 'conditional-1',
-    title: 'Câu điều kiện loại 1',
-    formula: 'If + S + V(s/es), S + will + V',
-    formulaVi: 'Nếu + chủ ngữ + động từ hiện tại, chủ ngữ + will + động từ nguyên thể',
-    explanation: 'Diễn tả sự việc có thể xảy ra ở hiện tại hoặc tương lai. Mệnh đề IF dùng thì hiện tại đơn, mệnh đề chính dùng will + V.',
-    examples: [
-      { en: 'If it rains, I will stay at home.', vi: 'Nếu trời mưa, tôi sẽ ở nhà.' },
-      { en: 'If you study hard, you will pass the exam.', vi: 'Nếu bạn học chăm, bạn sẽ đỗ kỳ thi.' },
-    ],
-    exercises: [
-      {
-        id: 'c1-1',
-        scrambled: ['if', 'rains', 'it', 'tomorrow', 'stay', 'will', 'we', 'at', 'home'],
-        answer: 'If it rains tomorrow, we will stay at home.',
-        translation: 'Nếu ngày mai trời mưa, chúng tôi sẽ ở nhà.',
-      },
-      {
-        id: 'c1-2',
-        scrambled: ['will', 'you', 'if', 'call', 'me', 'I', 'need', 'help'],
-        answer: 'If you need help, call me.',
-        translation: 'Nếu bạn cần giúp đỡ, hãy gọi cho tôi.',
-      },
-    ],
-  },
-  {
-    id: 'present-perfect',
-    title: 'Thì hiện tại hoàn thành',
-    formula: 'S + have/has + V3/ed',
-    formulaVi: 'Chủ ngữ + have/has + động từ phân từ II',
-    explanation: 'Diễn tả hành động đã xảy ra trong quá khứ và có kết quả/kết nối với hiện tại. Dùng have với I/you/we/they, has với he/she/it.',
-    examples: [
-      { en: 'I have finished my homework.', vi: 'Tôi đã làm xong bài tập về nhà.' },
-      { en: 'She has lived here for 10 years.', vi: 'Cô ấy đã sống ở đây được 10 năm.' },
-    ],
-    exercises: [
-      {
-        id: 'pp-1',
-        scrambled: ['have', 'never', 'I', 'been', 'to', 'Paris'],
-        answer: 'I have never been to Paris.',
-        translation: 'Tôi chưa bao giờ đến Paris.',
-      },
-      {
-        id: 'pp-2',
-        scrambled: ['has', 'she', 'the', 'finished', 'project', 'yet'],
-        answer: 'Has she finished the project yet?',
-        translation: 'Cô ấy đã làm xong dự án chưa?',
-      },
-    ],
-  },
-  {
-    id: 'passive-voice',
-    title: 'Câu bị động',
-    formula: 'S + be + V3/ed + (by + O)',
-    formulaVi: 'Chủ ngữ + be + động từ phân từ II + (bởi + tân ngữ)',
-    explanation: 'Diễn tả hành động mà chủ ngữ "bị" tác động bởi một tác nhân khác. Be chia theo thì, động từ chính luôn ở dạng V3/ed.',
-    examples: [
-      { en: 'The letter was written by him.', vi: 'Bức thư được viết bởi anh ấy.' },
-      { en: 'English is spoken all over the world.', vi: 'Tiếng Anh được nói ở khắp nơi trên thế giới.' },
-    ],
-    exercises: [
-      {
-        id: 'pv-1',
-        scrambled: ['was', 'the', 'cake', 'made', 'by', 'my', 'mom'],
-        answer: 'The cake was made by my mom.',
-        translation: 'Chiếc bánh được làm bởi mẹ tôi.',
-      },
-      {
-        id: 'pv-2',
-        scrambled: ['is', 'English', 'in', 'spoken', 'many', 'countries'],
-        answer: 'English is spoken in many countries.',
-        translation: 'Tiếng Anh được nói ở nhiều quốc gia.',
-      },
-    ],
-  },
-  {
-    id: 'wh-questions',
-    title: 'Câu hỏi với Wh-',
-    formula: 'Wh- + do/does/did + S + V?',
-    formulaVi: 'Từ hỏi + do/does/did + chủ ngữ + động từ nguyên thể?',
-    explanation: 'Dùng để hỏi thông tin cụ thể (what, where, when, why, who, how). Sau Wh- là trợ động từ do/does/did, rồi đến chủ ngữ và động từ nguyên thể.',
-    examples: [
-      { en: 'Where do you live?', vi: 'Bạn sống ở đâu?' },
-      { en: 'What did she buy yesterday?', vi: 'Cô ấy đã mua gì hôm qua?' },
-    ],
-    exercises: [
-      {
-        id: 'wh-1',
-        scrambled: ['does', 'she', 'work', 'where', '?'],
-        answer: 'Where does she work?',
-        translation: 'Cô ấy làm việc ở đâu?',
-      },
-      {
-        id: 'wh-2',
-        scrambled: ['did', 'you', 'what', 'do', 'last', 'weekend', '?'],
-        answer: 'What did you do last weekend?',
-        translation: 'Bạn đã làm gì cuối tuần trước?',
-      },
-    ],
-  },
-  {
-    id: 'relative-clause',
-    title: 'Mệnh đề quan hệ',
-    formula: 'S + V + who/which/that/where + S + V',
-    formulaVi: 'Chủ ngữ + động từ + đại từ quan hệ + chủ ngữ + động từ',
-    explanation: 'Dùng để bổ nghĩa cho danh từ đứng trước. Who cho người, which cho vật, that cho cả người và vật, where cho nơi chốn.',
-    examples: [
-      { en: 'The man who is talking is my teacher.', vi: 'Người đàn ông đang nói chuyện là thầy giáo tôi.' },
-      { en: 'This is the book that I bought yesterday.', vi: 'Đây là cuốn sách tôi đã mua hôm qua.' },
-    ],
-    exercises: [
-      {
-        id: 'rc-1',
-        scrambled: ['the', 'man', 'who', 'is', 'my', 'teacher', 'talking'],
-        answer: 'The man who is talking is my teacher.',
-        translation: 'Người đàn ông đang nói chuyện là thầy giáo tôi.',
-      },
-      {
-        id: 'rc-2',
-        scrambled: ['this', 'is', 'the', 'book', 'that', 'I', 'bought', 'yesterday'],
-        answer: 'This is the book that I bought yesterday.',
-        translation: 'Đây là cuốn sách tôi đã mua hôm qua.',
-      },
-    ],
-  },
-]
+import { apiClient } from '@/lib/api-client'
 
 export function StructurePractice() {
+  const { data: sessions = [], isLoading } = useQuery({
+    queryKey: ['grammar', 'structure-sessions'],
+    queryFn: () => apiClient.grammar.getStructureSessions(),
+  })
+
   const [activeSession, setActiveSession] = useState(0)
   const [currentExercise, setCurrentExercise] = useState(0)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
@@ -155,11 +19,11 @@ export function StructurePractice() {
   const [showFormula, setShowFormula] = useState(true)
   const [sessionProgress, setSessionProgress] = useState<Record<string, number>>({})
 
-  const session = SESSIONS[activeSession]
-  if (!session) return <div className="text-muted-foreground">Không có session.</div>
+  if (isLoading) return <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+  if (sessions.length === 0) return <div className="text-muted-foreground">Không có session.</div>
 
-  const exercise = session.exercises[currentExercise]
-  if (!exercise) return <div className="text-muted-foreground">Không có bài tập.</div>
+  const session = (sessions[activeSession] ?? sessions[0])!
+  const exercise = (session.exercises[currentExercise] ?? session.exercises[0])!
   const isCorrect = checked && selectedWords.join(' ') === exercise.answer
   const progress = sessionProgress[session.id] || 0
 
@@ -200,11 +64,10 @@ export function StructurePractice() {
 
   return (
     <div className="space-y-5">
-      {/* Session Selector */}
       <div className="space-y-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Chọn công thức để luyện tập</p>
         <div className="flex flex-wrap gap-2">
-          {SESSIONS.map((s, i) => {
+          {sessions.map((s, i) => {
             const isActive = activeSession === i
             const completed = sessionProgress[s.id] || 0
             const total = s.exercises.length
@@ -235,8 +98,7 @@ export function StructurePractice() {
         </div>
       </div>
 
-      {/* Formula Card */}
-      {showFormula && (
+      {showFormula ? (
         <div className="rounded-2xl border bg-card p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -250,17 +112,11 @@ export function StructurePractice() {
               Ẩn công thức →
             </button>
           </div>
-
-          {/* Formula Display */}
           <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-2">
             <p className="text-lg font-mono font-semibold text-primary text-center">{session.formula}</p>
             <p className="text-sm text-muted-foreground text-center">{session.formulaVi}</p>
           </div>
-
-          {/* Explanation */}
           <p className="text-sm text-muted-foreground leading-relaxed">{session.explanation}</p>
-
-          {/* Examples */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-muted-foreground">Ví dụ:</p>
             <div className="space-y-2">
@@ -272,7 +128,6 @@ export function StructurePractice() {
               ))}
             </div>
           </div>
-
           <button
             onClick={() => setShowFormula(false)}
             className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
@@ -280,10 +135,7 @@ export function StructurePractice() {
             Bắt đầu luyện tập →
           </button>
         </div>
-      )}
-
-      {/* Exercise Card */}
-      {!showFormula && (
+      ) : (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -296,20 +148,15 @@ export function StructurePractice() {
               <span className="text-xs text-muted-foreground">
                 Hoàn thành: {progress}/{session.exercises.length}
               </span>
-              <button
-                onClick={() => setShowFormula(true)}
-                className="text-xs text-primary hover:underline"
-              >
+              <button onClick={() => setShowFormula(true)} className="text-xs text-primary hover:underline">
                 Xem lại công thức
               </button>
             </div>
           </div>
 
           <div className="rounded-2xl border bg-card p-6 space-y-5">
-            {/* Translation */}
             <p className="text-sm text-muted-foreground">{exercise.translation}</p>
 
-            {/* Scrambled Words */}
             <div className="flex flex-wrap gap-2">
               {exercise.scrambled.map((word, i) => {
                 const isSelected = selectedWords.includes(word)
@@ -331,7 +178,6 @@ export function StructurePractice() {
               })}
             </div>
 
-            {/* User Answer */}
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Câu của bạn:</p>
               <div
@@ -348,7 +194,6 @@ export function StructurePractice() {
               </div>
             </div>
 
-            {/* Feedback */}
             {checked && (
               <div>
                 {isCorrect ? (
@@ -368,7 +213,6 @@ export function StructurePractice() {
               </div>
             )}
 
-            {/* Actions */}
             <div className="flex items-center gap-3">
               {!checked ? (
                 <>

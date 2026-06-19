@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { History } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -36,7 +37,11 @@ export function WritingHistorySettings() {
       ) : (
         <div className="space-y-2">
           {writingHistory.map(e => (
-            <div key={e.id} className="rounded-2xl border bg-card p-4">
+            <Link
+              key={e.id}
+              href={`/writing/history/${e.id}`}
+              className="rounded-2xl border bg-card p-4 block hover:border-primary/30 transition-colors"
+            >
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
                 <span className="bg-muted px-2 py-0.5 rounded-full font-medium">{MODE_LABEL[e.mode] ?? e.mode}</span>
                 <span>{e.topic}</span>
@@ -54,7 +59,7 @@ export function WritingHistorySettings() {
                   {e.score}/100
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

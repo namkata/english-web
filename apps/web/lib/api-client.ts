@@ -118,9 +118,22 @@ const vocabulary = {
 }
 
 // ---- Quiz ----
+interface QuizQuestion {
+  id: string
+  type: string
+  question: string
+  options: string[]
+  correctAnswer: string
+  explanation: string
+}
+
 const quiz = {
   generate: async (data: GenerateQuizInput) => {
     const res = await http.post('/quiz', data)
+    return res.data
+  },
+  generateQuestions: async (params?: { count?: number; level?: string; types?: string[] }) => {
+    const res = await http.get<{ questions: QuizQuestion[] }>('/quiz/generate', { params })
     return res.data
   },
   submit: async (quizId: string, answers: Record<string, string>) => {
@@ -215,4 +228,101 @@ const community = {
   },
 }
 
-export const apiClient = { auth, reading, vocabulary, quiz, writing, gamification, user, feedback, community }
+// ---- Grammar ----
+interface VocabExercise {
+  id: string
+  vietnamese: string
+  english: string
+  targetWord: string
+  hint: string
+  type: string
+}
+interface FillInBlankExercise {
+  id: string
+  sentence: string
+  translation: string
+  answer: string
+  grammarPoint: string
+  hint: string
+  fullSentence: string
+}
+interface StructureSession {
+  id: string
+  title: string
+  formula: string
+  formulaVi: string
+  explanation: string
+  examples: Array<{ en: string; vi: string }>
+  exercises: Array<{
+    id: string
+    scrambled: string[]
+    answer: string
+    translation: string
+  }>
+}
+
+const grammar = {
+  getTopics: async () => {
+    const res = await http.get<{ topics: { label: string; count: number }[] }>('/grammar')
+    return res.data
+  },
+  getVocabExercises: async () => {
+    const res = await http.get<VocabExercise[]>('/grammar/vocab-exercises')
+    return res.data
+  },
+  getFillInBlank: async () => {
+    const res = await http.get<FillInBlankExercise[]>('/grammar/fill-in-blank')
+    return res.data
+  },
+  getStructureSessions: async () => {
+    const res = await http.get<StructureSession[]>('/grammar/structure-sessions')
+    return res.data
+  },
+}
+
+// ---- Pronunciation ----
+interface PhonemeItem {
+  id: string
+  symbol: string
+  example: string
+  exampleVi: string
+  audioHint: string
+  mouthPosition: string
+}
+interface PronunciationWord {
+  id: string
+  word: string
+  phonetic: string
+  meaning: string
+  example: string
+  difficultSound: string
+  tips: string
+}
+interface PronunciationSentence {
+  id: string
+  sentence: string
+  translation: string
+  phonetic: string
+  difficultWords: string[]
+  tips: string
+}
+
+const pronunciation = {
+  getPhonemes: async () => {
+    const res = await http.get<{
+      categories: { key: string; label: string; count: number }[]
+      phonemes: Record<string, PhonemeItem[]>
+    }>('/pronunciation')
+    return res.data
+  },
+  getWords: async () => {
+    const res = await http.get<PronunciationWord[]>('/pronunciation/words')
+    return res.data
+  },
+  getSentences: async () => {
+    const res = await http.get<PronunciationSentence[]>('/pronunciation/sentences')
+    return res.data
+  },
+}
+
+export const apiClient = { auth, reading, vocabulary, quiz, writing, gamification, user, feedback, community, grammar, pronunciation }

@@ -1,66 +1,28 @@
 'use client'
 
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Volume2, Play, CheckCircle2, RotateCcw } from 'lucide-react'
-const WORDS = [
-  {
-    id: '1',
-    word: 'through',
-    phonetic: '/θruː/',
-    meaning: 'xuyên qua',
-    example: 'walk through the park',
-    difficultSound: '/θ/',
-    tips: 'Đặt lưỡi giữa 2 răng trước, thổi hơi mạnh',
-  },
-  {
-    id: '2',
-    word: 'thought',
-    phonetic: '/θɔːt/',
-    meaning: 'nghĩ',
-    example: 'I thought about it',
-    difficultSound: '/θ/',
-    tips: 'Giữ lưỡi chạm răng, không rung dây thanh',
-  },
-  {
-    id: '3',
-    word: 'comfortable',
-    phonetic: '/ˈkʌmftəbl/',
-    meaning: 'thoải mái',
-    example: 'This chair is comfortable',
-    difficultSound: '/ftəbl/',
-    tips: 'Đọc nhanh: /ˈkʌm-fə-təbl/, bỏ âm /t/ ở giữa',
-  },
-  {
-    id: '4',
-    word: ' schedule',
-    phonetic: '/ˈʃedjuːl/ (Br) /ˈskedʒuːl/ (Am)',
-    meaning: 'lịch trình',
-    example: 'check the schedule',
-    difficultSound: '/ʃ/ vs /sk/',
-    tips: 'BrE: /ʃedjuːl/, AmE: /skedʒuːl/',
-  },
-  {
-    id: '5',
-    word: 'world',
-    phonetic: '/wɜːld/',
-    meaning: 'thế giới',
-    example: 'around the world',
-    difficultSound: '/ɜːl/',
-    tips: '/ɜː/ lưỡi giữa, rồi /l/ đầu lưỡi chạm nướu',
-  },
-]
+import { apiClient } from '@/lib/api-client'
 
 export function WordPractice() {
+  const { data: words = [], isLoading } = useQuery({
+    queryKey: ['pronunciation', 'words'],
+    queryFn: () => apiClient.pronunciation.getWords(),
+  })
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showPhonetic, setShowPhonetic] = useState(false)
   const [showTips, setShowTips] = useState(false)
   const [practiced, setPracticed] = useState<Set<string>>(new Set())
 
-  const word = WORDS[currentIndex]
-  if (!word) return <div className="text-muted-foreground">Không có từ vựng.</div>
+  if (isLoading) return <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+  if (words.length === 0) return <div className="text-muted-foreground">Không có từ vựng.</div>
+
+  const word = (words[currentIndex] ?? words[0])!
 
   const handleNext = () => {
-    setCurrentIndex(i => (i + 1) % WORDS.length)
+    setCurrentIndex(i => (i + 1) % words.length)
     setShowPhonetic(false)
     setShowTips(false)
   }
@@ -74,7 +36,7 @@ export function WordPractice() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-            Từ {currentIndex + 1}/{WORDS.length}
+            Từ {currentIndex + 1}/{words.length}
           </span>
           {practiced.has(word.id) && (
             <span className="text-xs text-green-600 flex items-center gap-1">
@@ -85,7 +47,6 @@ export function WordPractice() {
       </div>
 
       <div className="rounded-2xl border bg-card p-6 space-y-5">
-        {/* Word Display */}
         <div className="text-center space-y-3">
           <div className="text-4xl font-bold text-primary">{word.word}</div>
           {showPhonetic && (
@@ -93,14 +54,12 @@ export function WordPractice() {
           )}
         </div>
 
-        {/* Details */}
         <div className="space-y-2 text-center">
           <p className="text-sm text-muted-foreground">{word.meaning}</p>
           <p className="text-sm italic text-muted-foreground">{word.example}</p>
           <p className="text-xs text-primary font-medium">Âm khó: {word.difficultSound}</p>
         </div>
 
-        {/* Tips */}
         {showTips && (
           <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
             <p className="text-sm text-amber-700">
@@ -109,13 +68,9 @@ export function WordPractice() {
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex items-center gap-3 flex-wrap">
           <button
-            onClick={() => {
-              // Play audio
-              handlePractice()
-            }}
+            onClick={() => handlePractice()}
             className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
           >
             <Play size={16} /> Nghe mẫu
